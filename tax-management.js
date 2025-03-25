@@ -82,268 +82,268 @@ document.addEventListener("DOMContentLoaded", () => {
     contentSection.className = "container-fluid"
   
     contentSection.innerHTML = `
-      <h2 class="mb-4">Tax Management</h2>
-      
-      <div class="row mb-4">
-        <div class="col-md-8">
-          <div class="input-group">
-            <input type="text" id="tax-search" class="form-control" placeholder="Search tax records...">
-            <button class="btn btn-primary" type="button" id="tax-search-btn">
-              <i class="fas fa-search"></i> Search
+        <h2 class="mb-4">Tax Management</h2>
+        
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <div class="input-group">
+              <input type="text" id="tax-search" class="form-control" placeholder="Search tax records...">
+              <button class="btn btn-primary" type="button" id="tax-search-btn">
+                <i class="fas fa-search"></i> Search
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTaxRecordModal">
+              <i class="fas fa-plus"></i> Add New Tax Record
             </button>
           </div>
         </div>
-        <div class="col-md-4 text-end">
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTaxRecordModal">
-            <i class="fas fa-plus"></i> Add New Tax Record
-          </button>
-        </div>
-      </div>
-      
-      <div class="row mb-4">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Filters</h5>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-3 mb-3">
-                  <label for="tax-filter-date-from" class="form-label">Date From</label>
-                  <input type="date" class="form-control" id="tax-filter-date-from">
-                </div>
-                <div class="col-md-3 mb-3">
-                  <label for="tax-filter-date-to" class="form-label">Date To</label>
-                  <input type="date" class="form-control" id="tax-filter-date-to">
-                </div>
-                <div class="col-md-3 mb-3">
-                  <label for="tax-filter-type" class="form-label">Tax Type</label>
-                  <select class="form-select" id="tax-filter-type">
-                    <option value="">All Types</option>
-                    <option value="VAT">VAT</option>
-                    <option value="Income Tax">Income Tax</option>
-                    <option value="Sales Tax">Sales Tax</option>
-                    <option value="Property Tax">Property Tax</option>
-                  </select>
-                </div>
-                <div class="col-md-3 mb-3">
-                  <label for="tax-filter-status" class="form-label">Status</label>
-                  <select class="form-select" id="tax-filter-status">
-                    <option value="">All</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Overdue">Overdue</option>
-                  </select>
-                </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Filters</h5>
               </div>
-              <div class="row">
-                <div class="col-md-12 text-end">
-                  <button class="btn btn-primary" id="apply-tax-filters">Apply Filters</button>
-                  <button class="btn btn-secondary" id="reset-tax-filters">Reset</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Tax Records</h5>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th>Reference #</th>
-                      <th>Date</th>
-                      <th>Tax Type</th>
-                      <th>Period</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tax-records-table-body">
-                    <!-- Table content will be loaded dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Add Tax Record Modal -->
-      <div class="modal fade" id="addTaxRecordModal" tabindex="-1" aria-labelledby="addTaxRecordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addTaxRecordModalLabel">Add New Tax Record</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form id="add-tax-record-form">
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="tax-date" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="tax-date" required>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3 mb-3">
+                    <label for="tax-filter-date-from" class="form-label">Date From</label>
+                    <input type="date" class="form-control" id="tax-filter-date-from">
                   </div>
-                  <div class="col-md-6">
-                    <label for="tax-reference" class="form-label">Reference Number</label>
-                    <input type="text" class="form-control" id="tax-reference" required>
+                  <div class="col-md-3 mb-3">
+                    <label for="tax-filter-date-to" class="form-label">Date To</label>
+                    <input type="date" class="form-control" id="tax-filter-date-to">
                   </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="tax-type" class="form-label">Tax Type</label>
-                    <select class="form-select" id="tax-type" required>
-                      <option value="">Select Tax Type</option>
+                  <div class="col-md-3 mb-3">
+                    <label for="tax-filter-type" class="form-label">Tax Type</label>
+                    <select class="form-select" id="tax-filter-type">
+                      <option value="">All Types</option>
                       <option value="VAT">VAT</option>
                       <option value="Income Tax">Income Tax</option>
                       <option value="Sales Tax">Sales Tax</option>
                       <option value="Property Tax">Property Tax</option>
                     </select>
                   </div>
-                  <div class="col-md-6">
-                    <label for="tax-period" class="form-label">Period</label>
-                    <input type="text" class="form-control" id="tax-period" required>
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="tax-amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="tax-amount" step="0.01" min="0" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="tax-status" class="form-label">Status</label>
-                    <select class="form-select" id="tax-status" required>
-                      <option value="Pending">Pending</option>
+                  <div class="col-md-3 mb-3">
+                    <label for="tax-filter-status" class="form-label">Status</label>
+                    <select class="form-select" id="tax-filter-status">
+                      <option value="">All</option>
                       <option value="Paid">Paid</option>
+                      <option value="Pending">Pending</option>
                       <option value="Overdue">Overdue</option>
                     </select>
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label for="tax-notes" class="form-label">Notes</label>
-                  <textarea class="form-control" id="tax-notes" rows="3"></textarea>
+                <div class="row">
+                  <div class="col-md-12 text-end">
+                    <button class="btn btn-primary" id="apply-tax-filters">Apply Filters</button>
+                    <button class="btn btn-secondary" id="reset-tax-filters">Reset</button>
+                  </div>
                 </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="save-tax-record">Save Record</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- Edit Tax Record Modal -->
-      <div class="modal fade" id="editTaxRecordModal" tabindex="-1" aria-labelledby="editTaxRecordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editTaxRecordModalLabel">Edit Tax Record</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form id="edit-tax-record-form">
-                <input type="hidden" id="edit-tax-id">
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="edit-tax-date" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="edit-tax-date" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="edit-tax-reference" class="form-label">Reference Number</label>
-                    <input type="text" class="form-control" id="edit-tax-reference" required>
-                  </div>
+        
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title mb-0">Tax Records</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>Reference #</th>
+                        <th>Date</th>
+                        <th>Tax Type</th>
+                        <th>Period</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tax-records-table-body">
+                      <!-- Table content will be loaded dynamically -->
+                    </tbody>
+                  </table>
                 </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="edit-tax-type" class="form-label">Tax Type</label>
-                    <select class="form-select" id="edit-tax-type" required>
-                      <option value="">Select Tax Type</option>
-                      <option value="VAT">VAT</option>
-                      <option value="Income Tax">Income Tax</option>
-                      <option value="Sales Tax">Sales Tax</option>
-                      <option value="Property Tax">Property Tax</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="edit-tax-period" class="form-label">Period</label>
-                    <input type="text" class="form-control" id="edit-tax-period" required>
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="edit-tax-amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="edit-tax-amount" step="0.01" min="0" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="edit-tax-status" class="form-label">Status</label>
-                    <select class="form-select" id="edit-tax-status" required>
-                      <option value="Pending">Pending</option>
-                      <option value="Paid">Paid</option>
-                      <option value="Overdue">Overdue</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label for="edit-tax-notes" class="form-label">Notes</label>
-                  <textarea class="form-control" id="edit-tax-notes" rows="3"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="update-tax-record">Update Record</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- View Tax Record Modal -->
-      <div class="modal fade" id="viewTaxRecordModal" tabindex="-1" aria-labelledby="viewTaxRecordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="viewTaxRecordModalLabel">Tax Record Details</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="view-tax-record-details">
-              <!-- Tax record details will be loaded dynamically -->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+        <!-- Add Tax Record Modal -->
+        <div class="modal fade" id="addTaxRecordModal" tabindex="-1" aria-labelledby="addTaxRecordModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addTaxRecordModalLabel">Add New Tax Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="add-tax-record-form">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="tax-date" class="form-label">Date</label>
+                      <input type="date" class="form-control" id="tax-date" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="tax-reference" class="form-label">Reference Number</label>
+                      <input type="text" class="form-control" id="tax-reference" required>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="tax-type" class="form-label">Tax Type</label>
+                      <select class="form-select" id="tax-type" required>
+                        <option value="">Select Tax Type</option>
+                        <option value="VAT">VAT</option>
+                        <option value="Income Tax">Income Tax</option>
+                        <option value="Sales Tax">Sales Tax</option>
+                        <option value="Property Tax">Property Tax</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="tax-period" class="form-label">Period</label>
+                      <input type="text" class="form-control" id="tax-period" required>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="tax-amount" class="form-label">Amount</label>
+                      <input type="number" class="form-control" id="tax-amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="tax-status" class="form-label">Status</label>
+                      <select class="form-select" id="tax-status" required>
+                        <option value="Pending">Pending</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Overdue">Overdue</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="tax-notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="tax-notes" rows="3"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-tax-record">Save Record</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- Delete Confirmation Modal -->
-      <div class="modal fade" id="deleteTaxRecordModal" tabindex="-1" aria-labelledby="deleteTaxRecordModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="deleteTaxRecordModalLabel">Confirm Delete</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>Are you sure you want to delete this tax record? This action cannot be undone.</p>
-              <input type="hidden" id="delete-tax-id">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-danger" id="confirm-delete-tax">Delete</button>
+        
+        <!-- Edit Tax Record Modal -->
+        <div class="modal fade" id="editTaxRecordModal" tabindex="-1" aria-labelledby="editTaxRecordModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editTaxRecordModalLabel">Edit Tax Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="edit-tax-record-form">
+                  <input type="hidden" id="edit-tax-id">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="edit-tax-date" class="form-label">Date</label>
+                      <input type="date" class="form-control" id="edit-tax-date" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="edit-tax-reference" class="form-label">Reference Number</label>
+                      <input type="text" class="form-control" id="edit-tax-reference" required>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="edit-tax-type" class="form-label">Tax Type</label>
+                      <select class="form-select" id="edit-tax-type" required>
+                        <option value="">Select Tax Type</option>
+                        <option value="VAT">VAT</option>
+                        <option value="Income Tax">Income Tax</option>
+                        <option value="Sales Tax">Sales Tax</option>
+                        <option value="Property Tax">Property Tax</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="edit-tax-period" class="form-label">Period</label>
+                      <input type="text" class="form-control" id="edit-tax-period" required>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="edit-tax-amount" class="form-label">Amount</label>
+                      <input type="number" class="form-control" id="edit-tax-amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="edit-tax-status" class="form-label">Status</label>
+                      <select class="form-select" id="edit-tax-status" required>
+                        <option value="Pending">Pending</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Overdue">Overdue</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit-tax-notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="edit-tax-notes" rows="3"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="update-tax-record">Update Record</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    `
+        
+        <!-- View Tax Record Modal -->
+        <div class="modal fade" id="viewTaxRecordModal" tabindex="-1" aria-labelledby="viewTaxRecordModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="viewTaxRecordModalLabel">Tax Record Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="view-tax-record-details">
+                <!-- Tax record details will be loaded dynamically -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteTaxRecordModal" tabindex="-1" aria-labelledby="deleteTaxRecordModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteTaxRecordModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete this tax record? This action cannot be undone.</p>
+                <input type="hidden" id="delete-tax-id">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-tax">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
   
     return contentSection
   }
@@ -375,28 +375,28 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   
       row.innerHTML = `
-        <td>${record.referenceNumber}</td>
-        <td>${record.date}</td>
-        <td>${record.taxType}</td>
-        <td>${record.period}</td>
-        <td>$${record.amount.toFixed(2)}</td>
-        <td>
-          <span class="badge ${getTaxStatusBadgeClass(record.status)}">${record.status}</span>
-        </td>
-        <td>
-          <div class="btn-group" role="group">
-            <button type="button" class="btn btn-sm btn-info view-tax-record" data-id="${record.id}">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-primary edit-tax-record" data-id="${record.id}">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-danger delete-tax-record" data-id="${record.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </td>
-      `
+          <td>${record.referenceNumber}</td>
+          <td>${record.date}</td>
+          <td>${record.taxType}</td>
+          <td>${record.period}</td>
+          <td>₹${record.amount.toFixed(2)}</td>
+          <td>
+            <span class="badge ${getTaxStatusBadgeClass(record.status)}">${record.status}</span>
+          </td>
+          <td>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-sm btn-info view-tax-record" data-id="${record.id}">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-primary edit-tax-record" data-id="${record.id}">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-danger delete-tax-record" data-id="${record.id}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `
   
       tableBody.appendChild(row)
     })
@@ -423,63 +423,24 @@ document.addEventListener("DOMContentLoaded", () => {
   function initTaxManagementEventListeners() {
     // Add new tax record
     document.getElementById("save-tax-record").addEventListener("click", () => {
-      const date = document.getElementById("tax-date").value
-      const referenceNumber = document.getElementById("tax-reference").value
-      const taxType = document.getElementById("tax-type").value
-      const period = document.getElementById("tax-period").value
-      const amount = Number.parseFloat(document.getElementById("tax-amount").value)
-      const status = document.getElementById("tax-status").value
-      const notes = document.getElementById("tax-notes").value
+      try {
+        const date = document.getElementById("tax-date").value
+        const referenceNumber = document.getElementById("tax-reference").value
+        const taxType = document.getElementById("tax-type").value
+        const period = document.getElementById("tax-period").value
+        const amount = Number.parseFloat(document.getElementById("tax-amount").value)
+        const status = document.getElementById("tax-status").value
+        const notes = document.getElementById("tax-notes").value
   
-      if (!date || !referenceNumber || !taxType || !period || isNaN(amount) || !status) {
-        alert("Please fill in all required fields")
-        return
-      }
+        if (!date || !referenceNumber || !taxType || !period || isNaN(amount) || !status) {
+          alert("Please fill in all required fields")
+          return
+        }
   
-      const newId = taxRecords.length > 0 ? Math.max(...taxRecords.map((r) => r.id)) + 1 : 1
+        const newId = taxRecords.length > 0 ? Math.max(...taxRecords.map((r) => r.id)) + 1 : 1
   
-      const newTaxRecord = {
-        id: newId,
-        date: date,
-        referenceNumber: referenceNumber,
-        taxType: taxType,
-        period: period,
-        amount: amount,
-        status: status,
-        notes: notes,
-      }
-  
-      taxRecords.push(newTaxRecord)
-      renderTaxRecordsTable(taxRecords)
-  
-      // Close the modal and reset form
-      const modalElement = document.getElementById("addTaxRecordModal")
-      const bootstrap = window.bootstrap
-      const modal = new bootstrap.Modal(modalElement)
-      modal.hide()
-      document.getElementById("add-tax-record-form").reset()
-    })
-  
-    // Update tax record
-    document.getElementById("update-tax-record").addEventListener("click", () => {
-      const id = Number.parseInt(document.getElementById("edit-tax-id").value)
-      const date = document.getElementById("edit-tax-date").value
-      const referenceNumber = document.getElementById("edit-tax-reference").value
-      const taxType = document.getElementById("edit-tax-type").value
-      const period = document.getElementById("edit-tax-period").value
-      const amount = Number.parseFloat(document.getElementById("edit-tax-amount").value)
-      const status = document.getElementById("edit-tax-status").value
-      const notes = document.getElementById("edit-tax-notes").value
-  
-      if (!date || !referenceNumber || !taxType || !period || isNaN(amount) || !status) {
-        alert("Please fill in all required fields")
-        return
-      }
-  
-      const index = taxRecords.findIndex((r) => r.id === id)
-      if (index !== -1) {
-        taxRecords[index] = {
-          id: id,
+        const newTaxRecord = {
+          id: newId,
           date: date,
           referenceNumber: referenceNumber,
           taxType: taxType,
@@ -489,28 +450,110 @@ document.addEventListener("DOMContentLoaded", () => {
           notes: notes,
         }
   
-        renderTaxRecordsTable(taxRecords)
+        taxRecords.push(newTaxRecord)
   
-        // Close the modal
-        const modalElement = document.getElementById("editTaxRecordModal")
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById("addTaxRecordModal")
         const bootstrap = window.bootstrap
-        const modal = new bootstrap.Modal(modalElement)
-        modal.hide()
+        const modal = bootstrap.Modal.getInstance(modalElement)
+        if (modal) {
+          modal.hide()
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide()
+        }
+  
+        // Reset form
+        document.getElementById("add-tax-record-form").reset()
+  
+        // Then render the table
+        setTimeout(() => {
+          renderTaxRecordsTable(taxRecords)
+        }, 100)
+      } catch (error) {
+        console.error("Error saving tax record:", error)
+        alert("An error occurred while saving the tax record. Please try again.")
+      }
+    })
+  
+    // Update tax record
+    document.getElementById("update-tax-record").addEventListener("click", () => {
+      try {
+        const id = Number.parseInt(document.getElementById("edit-tax-id").value)
+        const date = document.getElementById("edit-tax-date").value
+        const referenceNumber = document.getElementById("edit-tax-reference").value
+        const taxType = document.getElementById("edit-tax-type").value
+        const period = document.getElementById("edit-tax-period").value
+        const amount = Number.parseFloat(document.getElementById("edit-tax-amount").value)
+        const status = document.getElementById("edit-tax-status").value
+        const notes = document.getElementById("edit-tax-notes").value
+  
+        if (!date || !referenceNumber || !taxType || !period || isNaN(amount) || !status) {
+          alert("Please fill in all required fields")
+          return
+        }
+  
+        const index = taxRecords.findIndex((r) => r.id === id)
+        if (index !== -1) {
+          taxRecords[index] = {
+            id: id,
+            date: date,
+            referenceNumber: referenceNumber,
+            taxType: taxType,
+            period: period,
+            amount: amount,
+            status: status,
+            notes: notes,
+          }
+  
+          // Close the modal first before rendering the table
+          const modalElement = document.getElementById("editTaxRecordModal")
+          const bootstrap = window.bootstrap
+          const modal = bootstrap.Modal.getInstance(modalElement)
+          if (modal) {
+            modal.hide()
+          } else {
+            // If modal instance doesn't exist, create it and then hide
+            new bootstrap.Modal(modalElement).hide()
+          }
+  
+          // Then render the table
+          setTimeout(() => {
+            renderTaxRecordsTable(taxRecords)
+          }, 100)
+        }
+      } catch (error) {
+        console.error("Error updating tax record:", error)
+        alert("An error occurred while updating the tax record. Please try again.")
       }
     })
   
     // Delete tax record
     document.getElementById("confirm-delete-tax").addEventListener("click", () => {
-      const id = Number.parseInt(document.getElementById("delete-tax-id").value)
+      try {
+        const id = Number.parseInt(document.getElementById("delete-tax-id").value)
   
-      taxRecords = taxRecords.filter((r) => r.id !== id)
-      renderTaxRecordsTable(taxRecords)
+        taxRecords = taxRecords.filter((r) => r.id !== id)
   
-      // Close the modal
-      const modalElement = document.getElementById("deleteTaxRecordModal")
-      const bootstrap = window.bootstrap
-      const modal = new bootstrap.Modal(modalElement)
-      modal.hide()
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById("deleteTaxRecordModal")
+        const bootstrap = window.bootstrap
+        const modal = bootstrap.Modal.getInstance(modalElement)
+        if (modal) {
+          modal.hide()
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide()
+        }
+  
+        // Then render the table
+        setTimeout(() => {
+          renderTaxRecordsTable(taxRecords)
+        }, 100)
+      } catch (error) {
+        console.error("Error deleting tax record:", error)
+        alert("An error occurred while deleting the tax record. Please try again.")
+      }
     })
   
     // Search functionality
@@ -585,20 +628,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (record) {
           const detailsContainer = document.getElementById("view-tax-record-details")
           detailsContainer.innerHTML = `
-            <div class="row">
-              <div class="col-md-6">
-                <p><strong>Reference Number:</strong> ${record.referenceNumber}</p>
-                <p><strong>Date:</strong> ${record.date}</p>
-                <p><strong>Tax Type:</strong> ${record.taxType}</p>
-                <p><strong>Period:</strong> ${record.period}</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Reference Number:</strong> ${record.referenceNumber}</p>
+                  <p><strong>Date:</strong> ${record.date}</p>
+                  <p><strong>Tax Type:</strong> ${record.taxType}</p>
+                  <p><strong>Period:</strong> ${record.period}</p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Amount:</strong> ₹${record.amount.toFixed(2)}</p>
+                  <p><strong>Status:</strong> <span class="badge ${getTaxStatusBadgeClass(record.status)}">${record.status}</span></p>
+                  <p><strong>Notes:</strong> ${record.notes || "No notes available"}</p>
+                </div>
               </div>
-              <div class="col-md-6">
-                <p><strong>Amount:</strong> $${record.amount.toFixed(2)}</p>
-                <p><strong>Status:</strong> <span class="badge ${getTaxStatusBadgeClass(record.status)}">${record.status}</span></p>
-                <p><strong>Notes:</strong> ${record.notes || "No notes available"}</p>
-              </div>
-            </div>
-          `
+            `
   
           const bootstrap = window.bootstrap
           const modal = new bootstrap.Modal(document.getElementById("viewTaxRecordModal"))

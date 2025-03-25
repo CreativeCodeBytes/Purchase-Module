@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${report.date}</td>
         <td>${report.supplier}</td>
         <td>${report.poNumber}</td>
-        <td>$${report.amount.toFixed(2)}</td>
+        <td>₹${report.amount.toFixed(2)}</td>
         <td>
           <span class="badge ${getPaymentBadgeClass(report.paymentStatus)}">${report.paymentStatus}</span>
         </td>
@@ -437,96 +437,136 @@ document.addEventListener("DOMContentLoaded", () => {
   function initPurchaseInvoiceReportsEventListeners() {
     // Add new report
     document.getElementById("save-purchase-invoice-report").addEventListener("click", () => {
-      const date = document.getElementById("invoice-date").value
-      const invoiceNumber = document.getElementById("invoice-number").value
-      const supplier = document.getElementById("invoice-supplier").value
-      const poNumber = document.getElementById("invoice-po-number").value
-      const amount = Number.parseFloat(document.getElementById("invoice-amount").value)
-      const paymentStatus = document.getElementById("invoice-payment-status").value
-  
-      if (!date || !invoiceNumber || !supplier || !poNumber || isNaN(amount) || !paymentStatus) {
-        alert("Please fill in all required fields")
-        return
-      }
-  
-      const newId = purchaseInvoiceReports.length > 0 ? Math.max(...purchaseInvoiceReports.map((r) => r.id)) + 1 : 1
-  
-      const newReport = {
-        id: newId,
-        date: date,
-        invoiceNumber: invoiceNumber,
-        supplier: supplier,
-        poNumber: poNumber,
-        amount: amount,
-        paymentStatus: paymentStatus,
-        approvalStatus: "Pending",
-      }
-  
-      purchaseInvoiceReports.push(newReport)
-      renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
-  
-      // Close the modal and reset form
-      const modalElement = document.getElementById("addPurchaseInvoiceReportModal")
-      // Declare bootstrap variable
-      const bootstrap = window.bootstrap
-      const modal = new bootstrap.Modal(modalElement)
-      modal.hide()
-      document.getElementById("add-purchase-invoice-report-form").reset()
-    })
-  
-    // Update report
-    document.getElementById("update-purchase-invoice-report").addEventListener("click", () => {
-      const id = Number.parseInt(document.getElementById("edit-invoice-id").value)
-      const date = document.getElementById("edit-invoice-date").value
-      const invoiceNumber = document.getElementById("edit-invoice-number").value
-      const supplier = document.getElementById("edit-invoice-supplier").value
-      const poNumber = document.getElementById("edit-invoice-po-number").value
-      const amount = Number.parseFloat(document.getElementById("edit-invoice-amount").value)
-      const paymentStatus = document.getElementById("edit-invoice-payment-status").value
-      const approvalStatus = document.getElementById("edit-invoice-approval-status").value
-  
-      if (!date || !invoiceNumber || !supplier || !poNumber || isNaN(amount) || !paymentStatus || !approvalStatus) {
-        alert("Please fill in all required fields")
-        return
-      }
-  
-      const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
-      if (index !== -1) {
-        purchaseInvoiceReports[index] = {
-          id: id,
+      try {
+        const date = document.getElementById("invoice-date").value
+        const invoiceNumber = document.getElementById("invoice-number").value
+        const supplier = document.getElementById("invoice-supplier").value
+        const poNumber = document.getElementById("invoice-po-number").value
+        const amount = Number.parseFloat(document.getElementById("invoice-amount").value)
+        const paymentStatus = document.getElementById("invoice-payment-status").value
+    
+        if (!date || !invoiceNumber || !supplier || !poNumber || isNaN(amount) || !paymentStatus) {
+          alert("Please fill in all required fields")
+          return
+        }
+    
+        const newId = purchaseInvoiceReports.length > 0 ? Math.max(...purchaseInvoiceReports.map((r) => r.id)) + 1 : 1
+    
+        const newReport = {
+          id: newId,
           date: date,
           invoiceNumber: invoiceNumber,
           supplier: supplier,
           poNumber: poNumber,
           amount: amount,
           paymentStatus: paymentStatus,
-          approvalStatus: approvalStatus,
+          approvalStatus: "Pending",
         }
-  
-        renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
-  
-        // Close the modal
-        const modalElement = document.getElementById("editPurchaseInvoiceReportModal")
-        // Declare bootstrap variable
+    
+        purchaseInvoiceReports.push(newReport)
+        
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById("addPurchaseInvoiceReportModal")
         const bootstrap = window.bootstrap
-        const modal = new bootstrap.Modal(modalElement)
-        modal.hide()
+        const modal = bootstrap.Modal.getInstance(modalElement)
+        if (modal) {
+          modal.hide()
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide()
+        }
+        
+        // Reset form
+        document.getElementById("add-purchase-invoice-report-form").reset()
+        
+        // Then render the table
+        setTimeout(() => {
+          renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+        }, 100)
+      } catch (error) {
+        console.error("Error saving invoice report:", error)
+        alert("An error occurred while saving the invoice report. Please try again.")
+      }
+    })
+  
+    // Update report
+    document.getElementById("update-purchase-invoice-report").addEventListener("click", () => {
+      try {
+        const id = Number.parseInt(document.getElementById("edit-invoice-id").value)
+        const date = document.getElementById("edit-invoice-date").value
+        const invoiceNumber = document.getElementById("edit-invoice-number").value
+        const supplier = document.getElementById("edit-invoice-supplier").value
+        const poNumber = document.getElementById("edit-invoice-po-number").value
+        const amount = Number.parseFloat(document.getElementById("edit-invoice-amount").value)
+        const paymentStatus = document.getElementById("edit-invoice-payment-status").value
+        const approvalStatus = document.getElementById("edit-invoice-approval-status").value
+    
+        if (!date || !invoiceNumber || !supplier || !poNumber || isNaN(amount) || !paymentStatus || !approvalStatus) {
+          alert("Please fill in all required fields")
+          return
+        }
+    
+        const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
+        if (index !== -1) {
+          purchaseInvoiceReports[index] = {
+            id: id,
+            date: date,
+            invoiceNumber: invoiceNumber,
+            supplier: supplier,
+            poNumber: poNumber,
+            amount: amount,
+            paymentStatus: paymentStatus,
+            approvalStatus: approvalStatus,
+          }
+    
+          // Close the modal first before rendering the table
+          const modalElement = document.getElementById("editPurchaseInvoiceReportModal")
+          const bootstrap = window.bootstrap
+          const modal = bootstrap.Modal.getInstance(modalElement)
+          if (modal) {
+            modal.hide()
+          } else {
+            // If modal instance doesn't exist, create it and then hide
+            new bootstrap.Modal(modalElement).hide()
+          }
+          
+          // Then render the table
+          setTimeout(() => {
+            renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+          }, 100)
+        }
+      } catch (error) {
+        console.error("Error updating invoice report:", error)
+        alert("An error occurred while updating the invoice report. Please try again.")
       }
     })
   
     // Delete report
     document.getElementById("confirm-delete-invoice-report").addEventListener("click", () => {
-      const id = Number.parseInt(document.getElementById("delete-invoice-id").value)
-  
-      purchaseInvoiceReports = purchaseInvoiceReports.filter((r) => r.id !== id)
-      renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
-  
-      // Close the modal
-      const modalElement = document.getElementById("deletePurchaseInvoiceReportModal")
-      // Declare bootstrap variable
-      const bootstrap = window.bootstrap
-      const modal = new bootstrap.Modal(modalElement)
-      modal.hide()
+      try {
+        const id = Number.parseInt(document.getElementById("delete-invoice-id").value)
+    
+        purchaseInvoiceReports = purchaseInvoiceReports.filter((r) => r.id !== id)
+        
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById("deletePurchaseInvoiceReportModal")
+        const bootstrap = window.bootstrap
+        const modal = bootstrap.Modal.getInstance(modalElement)
+        if (modal) {
+          modal.hide()
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide()
+        }
+        
+        // Then render the table
+        setTimeout(() => {
+          renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+        }, 100)
+      } catch (error) {
+        console.error("Error deleting invoice report:", error)
+        alert("An error occurred while deleting the invoice report. Please try again.")
+      }
     })
   
     // Search functionality
@@ -636,12 +676,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Approve buttons
     document.querySelectorAll(".approve-invoice-report").forEach((button) => {
       button.addEventListener("click", function () {
-        const id = Number.parseInt(this.getAttribute("data-id"))
-        const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
-  
-        if (index !== -1) {
-          purchaseInvoiceReports[index].approvalStatus = "Approved"
-          renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+        try {
+          const id = Number.parseInt(this.getAttribute("data-id"))
+          const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
+      
+          if (index !== -1) {
+            purchaseInvoiceReports[index].approvalStatus = "Approved"
+            renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+          }
+        } catch (error) {
+          console.error("Error approving invoice report:", error)
+          alert("An error occurred while approving the invoice report. Please try again.")
         }
       })
     })
@@ -649,12 +694,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reject buttons
     document.querySelectorAll(".reject-invoice-report").forEach((button) => {
       button.addEventListener("click", function () {
-        const id = Number.parseInt(this.getAttribute("data-id"))
-        const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
-  
-        if (index !== -1) {
-          purchaseInvoiceReports[index].approvalStatus = "Rejected"
-          renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+        try {
+          const id = Number.parseInt(this.getAttribute("data-id"))
+          const index = purchaseInvoiceReports.findIndex((r) => r.id === id)
+      
+          if (index !== -1) {
+            purchaseInvoiceReports[index].approvalStatus = "Rejected"
+            renderPurchaseInvoiceReportsTable(purchaseInvoiceReports)
+          }
+        } catch (error) {
+          console.error("Error rejecting invoice report:", error)
+          alert("An error occurred while rejecting the invoice report. Please try again.")
         }
       })
     })
@@ -693,5 +743,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  
   

@@ -1,10 +1,11 @@
 // Purchase Reports Management
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
+    
     // Add event listener for the Purchase Reports menu item
     const purchaseReportsLink = document.querySelector('a[onclick="loadContent(\'purchase-reports\')"]');
     if (purchaseReportsLink) {
       purchaseReportsLink.removeAttribute("onclick");
-      purchaseReportsLink.addEventListener("click", function(e) {
+      purchaseReportsLink.addEventListener("click", (e) => {
         e.preventDefault();
         handlePurchaseReportsClick();
       });
@@ -349,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <td>${report.id}</td>
         <td>${report.date}</td>
         <td>${report.supplier}</td>
-        <td>$${report.amount.toFixed(2)}</td>
+        <td>₹${report.amount.toFixed(2)}</td>
         <td>${report.paymentMethod}</td>
         <td>
           <span class="badge ${getBadgeClass(report.status)}">${report.status}</span>
@@ -396,97 +397,137 @@ document.addEventListener("DOMContentLoaded", function() {
   // Function to initialize event listeners for the Purchase Reports section
   function initPurchaseReportsEventListeners() {
     // Add new transaction
-    document.getElementById('save-purchase-report').addEventListener('click', function() {
-      const date = document.getElementById('transaction-date').value;
-      const supplier = document.getElementById('transaction-supplier').value;
-      const amount = parseFloat(document.getElementById('transaction-amount').value);
-      const paymentMethod = document.getElementById('transaction-payment-method').value;
-      const description = document.getElementById('transaction-description').value;
-      
-      if (!date || !supplier || isNaN(amount) || !paymentMethod) {
-        alert('Please fill in all required fields');
-        return;
-      }
-      
-      const newId = purchaseReports.length > 0 ? Math.max(...purchaseReports.map(r => r.id)) + 1 : 1;
-      
-      const newTransaction = {
-        id: newId,
-        date: date,
-        supplier: supplier,
-        amount: amount,
-        paymentMethod: paymentMethod,
-        status: 'Pending',
-        description: description
-      };
-      
-      purchaseReports.push(newTransaction);
-      renderPurchaseReportsTable(purchaseReports);
-      
-      // Close the modal and reset form
-      const modalElement = document.getElementById('addPurchaseReportModal');
-      // Declare bootstrap variable
-      const bootstrap = window.bootstrap;
-      const modal = new bootstrap.Modal(modalElement);
-      modal.hide();
-      document.getElementById('add-purchase-report-form').reset();
-    });
-    
-    // Update transaction
-    document.getElementById('update-purchase-report').addEventListener('click', function() {
-      const id = parseInt(document.getElementById('edit-transaction-id').value);
-      const date = document.getElementById('edit-transaction-date').value;
-      const supplier = document.getElementById('edit-transaction-supplier').value;
-      const amount = parseFloat(document.getElementById('edit-transaction-amount').value);
-      const paymentMethod = document.getElementById('edit-transaction-payment-method').value;
-      const status = document.getElementById('edit-transaction-status').value;
-      const description = document.getElementById('edit-transaction-description').value;
-      
-      if (!date || !supplier || isNaN(amount) || !paymentMethod || !status) {
-        alert('Please fill in all required fields');
-        return;
-      }
-      
-      const index = purchaseReports.findIndex(r => r.id === id);
-      if (index !== -1) {
-        purchaseReports[index] = {
-          id: id,
+    document.getElementById('save-purchase-report').addEventListener('click', () => {
+      try {
+        const date = document.getElementById('transaction-date').value;
+        const supplier = document.getElementById('transaction-supplier').value;
+        const amount = Number.parseFloat(document.getElementById('transaction-amount').value);
+        const paymentMethod = document.getElementById('transaction-payment-method').value;
+        const description = document.getElementById('transaction-description').value;
+        
+        if (!date || !supplier || isNaN(amount) || !paymentMethod) {
+          alert('Please fill in all required fields');
+          return;
+        }
+        
+        const newId = purchaseReports.length > 0 ? Math.max(...purchaseReports.map(r => r.id)) + 1 : 1;
+        
+        const newTransaction = {
+          id: newId,
           date: date,
           supplier: supplier,
           amount: amount,
           paymentMethod: paymentMethod,
-          status: status,
+          status: 'Pending',
           description: description
         };
         
-        renderPurchaseReportsTable(purchaseReports);
+        purchaseReports.push(newTransaction);
         
-        // Close the modal
-        const modalElement = document.getElementById('editPurchaseReportModal');
-        // Declare bootstrap variable
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById('addPurchaseReportModal');
         const bootstrap = window.bootstrap;
-        const modal = new bootstrap.Modal(modalElement);
-        modal.hide();
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide();
+        }
+        
+        // Reset form
+        document.getElementById('add-purchase-report-form').reset();
+        
+        // Then render the table
+        setTimeout(() => {
+          renderPurchaseReportsTable(purchaseReports);
+        }, 100);
+      } catch (error) {
+        console.error("Error saving purchase report:", error);
+        alert("An error occurred while saving the purchase report. Please try again.");
+      }
+    });
+    
+    // Update transaction
+    document.getElementById('update-purchase-report').addEventListener('click', () => {
+      try {
+        const id = Number.parseInt(document.getElementById('edit-transaction-id').value);
+        const date = document.getElementById('edit-transaction-date').value;
+        const supplier = document.getElementById('edit-transaction-supplier').value;
+        const amount = Number.parseFloat(document.getElementById('edit-transaction-amount').value);
+        const paymentMethod = document.getElementById('edit-transaction-payment-method').value;
+        const status = document.getElementById('edit-transaction-status').value;
+        const description = document.getElementById('edit-transaction-description').value;
+        
+        if (!date || !supplier || isNaN(amount) || !paymentMethod || !status) {
+          alert('Please fill in all required fields');
+          return;
+        }
+        
+        const index = purchaseReports.findIndex(r => r.id === id);
+        if (index !== -1) {
+          purchaseReports[index] = {
+            id: id,
+            date: date,
+            supplier: supplier,
+            amount: amount,
+            paymentMethod: paymentMethod,
+            status: status,
+            description: description
+          };
+          
+          // Close the modal first before rendering the table
+          const modalElement = document.getElementById('editPurchaseReportModal');
+          const bootstrap = window.bootstrap;
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          if (modal) {
+            modal.hide();
+          } else {
+            // If modal instance doesn't exist, create it and then hide
+            new bootstrap.Modal(modalElement).hide();
+          }
+          
+          // Then render the table
+          setTimeout(() => {
+            renderPurchaseReportsTable(purchaseReports);
+          }, 100);
+        }
+      } catch (error) {
+        console.error("Error updating purchase report:", error);
+        alert("An error occurred while updating the purchase report. Please try again.");
       }
     });
     
     // Delete transaction
-    document.getElementById('confirm-delete-purchase-report').addEventListener('click', function() {
-      const id = parseInt(document.getElementById('delete-transaction-id').value);
-      
-      purchaseReports = purchaseReports.filter(r => r.id !== id);
-      renderPurchaseReportsTable(purchaseReports);
-      
-      // Close the modal
-      const modalElement = document.getElementById('deletePurchaseReportModal');
-      // Declare bootstrap variable
-      const bootstrap = window.bootstrap;
-      const modal = new bootstrap.Modal(modalElement);
-      modal.hide();
+    document.getElementById('confirm-delete-purchase-report').addEventListener('click', () => {
+      try {
+        const id = Number.parseInt(document.getElementById('delete-transaction-id').value);
+        
+        purchaseReports = purchaseReports.filter(r => r.id !== id);
+        
+        // Close the modal first before rendering the table
+        const modalElement = document.getElementById('deletePurchaseReportModal');
+        const bootstrap = window.bootstrap;
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        } else {
+          // If modal instance doesn't exist, create it and then hide
+          new bootstrap.Modal(modalElement).hide();
+        }
+        
+        // Then render the table
+        setTimeout(() => {
+          renderPurchaseReportsTable(purchaseReports);
+        }, 100);
+      } catch (error) {
+        console.error("Error deleting purchase report:", error);
+        alert("An error occurred while deleting the purchase report. Please try again.");
+      }
     });
     
     // Search functionality
-    document.getElementById('purchase-reports-search-btn').addEventListener('click', function() {
+    document.getElementById('purchase-reports-search-btn').addEventListener('click', () => {
       const searchTerm = document.getElementById('purchase-reports-search').value.toLowerCase();
       
       if (!searchTerm) {
@@ -506,7 +547,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     // Filter functionality
-    document.getElementById('apply-purchase-reports-filters').addEventListener('click', function() {
+    document.getElementById('apply-purchase-reports-filters').addEventListener('click', () => {
       const dateFrom = document.getElementById('filter-date-from').value;
       const dateTo = document.getElementById('filter-date-to').value;
       const status = document.getElementById('filter-status').value;
@@ -534,7 +575,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     // Reset filters
-    document.getElementById('reset-purchase-reports-filters').addEventListener('click', function() {
+    document.getElementById('reset-purchase-reports-filters').addEventListener('click', () => {
       document.getElementById('filter-date-from').value = '';
       document.getElementById('filter-date-to').value = '';
       document.getElementById('filter-status').value = '';
@@ -549,7 +590,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Edit buttons
     document.querySelectorAll('.edit-purchase-report').forEach(button => {
       button.addEventListener('click', function() {
-        const id = parseInt(this.getAttribute('data-id'));
+        const id = Number.parseInt(this.getAttribute('data-id'));
         const report = purchaseReports.find(r => r.id === id);
         
         if (report) {
@@ -572,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Delete buttons
     document.querySelectorAll('.delete-purchase-report').forEach(button => {
       button.addEventListener('click', function() {
-        const id = parseInt(this.getAttribute('data-id'));
+        const id = Number.parseInt(this.getAttribute('data-id'));
         document.getElementById('delete-transaction-id').value = id;
         
         // Declare bootstrap variable
@@ -585,12 +626,17 @@ document.addEventListener("DOMContentLoaded", function() {
     // Approve buttons
     document.querySelectorAll('.approve-purchase-report').forEach(button => {
       button.addEventListener('click', function() {
-        const id = parseInt(this.getAttribute('data-id'));
-        const index = purchaseReports.findIndex(r => r.id === id);
-        
-        if (index !== -1) {
-          purchaseReports[index].status = 'Approved';
-          renderPurchaseReportsTable(purchaseReports);
+        try {
+          const id = Number.parseInt(this.getAttribute('data-id'));
+          const index = purchaseReports.findIndex(r => r.id === id);
+          
+          if (index !== -1) {
+            purchaseReports[index].status = 'Approved';
+            renderPurchaseReportsTable(purchaseReports);
+          }
+        } catch (error) {
+          console.error("Error approving purchase report:", error);
+          alert("An error occurred while approving the purchase report. Please try again.");
         }
       });
     });
@@ -598,12 +644,17 @@ document.addEventListener("DOMContentLoaded", function() {
     // Reject buttons
     document.querySelectorAll('.reject-purchase-report').forEach(button => {
       button.addEventListener('click', function() {
-        const id = parseInt(this.getAttribute('data-id'));
-        const index = purchaseReports.findIndex(r => r.id === id);
-        
-        if (index !== -1) {
-          purchaseReports[index].status = 'Rejected';
-          renderPurchaseReportsTable(purchaseReports);
+        try {
+          const id = Number.parseInt(this.getAttribute('data-id'));
+          const index = purchaseReports.findIndex(r => r.id === id);
+          
+          if (index !== -1) {
+            purchaseReports[index].status = 'Rejected';
+            renderPurchaseReportsTable(purchaseReports);
+          }
+        } catch (error) {
+          console.error("Error rejecting purchase report:", error);
+          alert("An error occurred while rejecting the purchase report. Please try again.");
         }
       });
     });
@@ -641,4 +692,4 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   }
-  
+
