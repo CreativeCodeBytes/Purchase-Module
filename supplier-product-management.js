@@ -118,7 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   <label for="supplierSelect" class="form-label">Supplier*</label>
                   <select class="form-select" id="supplierSelect" required>
                     <option value="">Select Supplier</option>
-                    <!-- Suppliers will be loaded here -->
+                    <option value="ABC Suppliers">ABC Suppliers</option>
+                  <option value="XYZ Corporation">XYZ Corporation</option>
+                  <option value="Global Traders">Global Traders</option>
+                  <option value="Tech Solutions">Tech Solutions</option>
+                  <option value="Office Supplies Inc.">Office Supplies Inc.</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -147,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="col-md-6">
                   <label for="productPrice" class="form-label">Price*</label>
                   <div class="input-group">
-                    <span class="input-group-text">$</span>
+                    <span class="input-group-text">₹</span>
                     <input type="number" class="form-control" id="productPrice" step="0.01" min="0" required>
                   </div>
                 </div>
@@ -372,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${product.name}</td>
         <td>${product.type}</td>
         <td>${product.sku}</td>
-        <td>$${product.price.toFixed(2)}</td>
+        <td>₹${product.price.toFixed(2)}</td>
         <td><span class="badge ${getProductStatusBadgeClass(product.status)}">${product.status}</span></td>
         <td>
           <button class="btn btn-sm btn-info view-product" data-id="${product.id}">
@@ -470,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>SKU/Code:</strong> ${product.sku}</p>
           </div>
           <div class="col-md-6">
-            <p><strong>Price:</strong> $${product.price.toFixed(2)}</p>
+            <p><strong>Price:</strong> ₹${product.price.toFixed(2)}</p>
             <p><strong>Status:</strong> <span class="badge ${getProductStatusBadgeClass(product.status)}">${product.status}</span></p>
             <p><strong>Minimum Order:</strong> ${product.minOrder || "N/A"}</p>
             <p><strong>Lead Time:</strong> ${product.leadTime ? `${product.leadTime} days` : "N/A"}</p>

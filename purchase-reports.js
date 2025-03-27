@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let purchaseReports = [
     { 
       id: 1, 
-      date: '2023-12-15', 
+      date: '2024-12-15', 
       supplier: 'ABC Supplies', 
       amount: 5000.00, 
       paymentMethod: 'Bank Transfer', 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     { 
       id: 2, 
-      date: '2023-12-10', 
+      date: '2024-12-10', 
       supplier: 'XYZ Manufacturing', 
       amount: 12500.00, 
       paymentMethod: 'Credit Card', 
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     { 
       id: 3, 
-      date: '2023-12-05', 
+      date: '2024-12-05', 
       supplier: 'Global Logistics', 
       amount: 3750.00, 
       paymentMethod: 'Check', 

@@ -94,9 +94,9 @@ function createSupplierContractContent() {
                 <td>SC-1001</td>
                 <td>ABC Suppliers</td>
                 <td>Purchase Agreement</td>
-                <td>1 Jan 2023</td>
-                <td>31 Dec 2023</td>
-                <td>$50,000.00</td>
+                <td>1 Jan 2024</td>
+                <td>31 Dec 2024</td>
+                <td>₹50,000.00</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td>
                   <div class="btn-group">
@@ -110,9 +110,9 @@ function createSupplierContractContent() {
                 <td>SC-1002</td>
                 <td>XYZ Corporation</td>
                 <td>Service Level Agreement</td>
-                <td>15 Feb 2023</td>
+                <td>15 Feb 2024</td>
                 <td>14 Feb 2024</td>
-                <td>$35,000.00</td>
+                <td>₹35,000.00</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td>
                   <div class="btn-group">
@@ -126,9 +126,9 @@ function createSupplierContractContent() {
                 <td>SC-1003</td>
                 <td>Global Traders</td>
                 <td>Framework Agreement</td>
-                <td>1 Mar 2023</td>
+                <td>1 Mar 2024</td>
                 <td>28 Feb 2025</td>
-                <td>$120,000.00</td>
+                <td>₹120,000.00</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td>
                   <div class="btn-group">
@@ -144,7 +144,7 @@ function createSupplierContractContent() {
                 <td>Maintenance Contract</td>
                 <td>1 Jan 2022</td>
                 <td>31 Dec 2022</td>
-                <td>$24,000.00</td>
+                <td>₹24,000.00</td>
                 <td><span class="badge bg-danger">Expired</span></td>
                 <td>
                   <div class="btn-group">
@@ -159,9 +159,9 @@ function createSupplierContractContent() {
                 <td>SC-1005</td>
                 <td>Office Supplies Inc.</td>
                 <td>Purchase Agreement</td>
-                <td>1 Apr 2023</td>
+                <td>1 Apr 2024</td>
                 <td>31 Mar 2024</td>
-                <td>$18,000.00</td>
+                <td>₹18,000.00</td>
                 <td><span class="badge bg-secondary">Draft</span></td>
                 <td>
                   <div class="btn-group">
@@ -173,6 +173,80 @@ function createSupplierContractContent() {
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Contract Modal -->
+    <div class="modal fade" id="addContractModal" tabindex="-1" aria-labelledby="addContractModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="addContractModalLabel">Add New Contract</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="add-contract-form">
+              <div class="mb-3">
+                <label for="add-supplier" class="form-label">Supplier</label>
+                <select class="form-select" id="add-supplier" name="supplier" required>
+                  <option value="">Select Supplier</option>
+                  <option value="ABC Suppliers">ABC Suppliers</option>
+                  <option value="XYZ Corporation">XYZ Corporation</option>
+                  <option value="Global Traders">Global Traders</option>
+                  <option value="Tech Solutions">Tech Solutions</option>
+                  <option value="Office Supplies Inc.">Office Supplies Inc.</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-contract-type" class="form-label">Contract Type</label>
+                <select class="form-select" id="add-contract-type" name="contractType" required>
+                  <option value="">Select Type</option>
+                  <option value="Purchase Agreement">Purchase Agreement</option>
+                  <option value="Service Level Agreement">Service Level Agreement</option>
+                  <option value="Maintenance Contract">Maintenance Contract</option>
+                  <option value="Framework Agreement">Framework Agreement</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="add-start-date" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="add-start-date" name="startDate" required>
+              </div>
+              <div class="mb-3">
+                <label for="add-end-date" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="add-end-date" name="endDate" required>
+              </div>
+              <div class="mb-3">
+                <label for="add-value" class="form-label">Contract Value</label>
+                <input type="number" class="form-control" id="add-value" name="value" step="0.01" required>
+              </div>
+              <div class="mb-3">
+                <label for="add-status" class="form-label">Status</label>
+                <select class="form-select" id="add-status" name="status" required>
+                  <option value="Draft">Draft</option>
+                  <option value="Active" selected>Active</option>
+                  <option value="Expired">Expired</option>
+                  <option value="Terminated">Terminated</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="add-auto-renewal" name="autoRenewal">
+                  <label class="form-check-label" for="add-auto-renewal">
+                    Auto Renewal
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="add-notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="add-notes" name="notes" rows="3"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="save-new-contract">Save Contract</button>
+          </div>
         </div>
       </div>
     </div>
@@ -190,6 +264,123 @@ function initSupplierContractManagement() {
 
   // Initialize action buttons
   initContractActions()
+  
+  // Initialize Add Contract functionality
+  initAddContract()
+}
+
+// Function to initialize Add Contract functionality
+function initAddContract() {
+  const addContractButton = document.getElementById("save-new-contract");
+  if (addContractButton) {
+    addContractButton.addEventListener("click", saveNewContract);
+  } else {
+    console.log("Add contract button not found");
+  }
+  
+  // Set default dates for the add contract form
+  const startDateInput = document.getElementById("add-start-date");
+  const endDateInput = document.getElementById("add-end-date");
+  
+  if (startDateInput && endDateInput) {
+    const today = new Date();
+    startDateInput.value = formatDateForInput(today);
+    
+    const nextYear = new Date(today);
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    endDateInput.value = formatDateForInput(nextYear);
+  }
+}
+
+// Function to save a new contract
+function saveNewContract() {
+  // Get form values
+  const supplier = document.getElementById("add-supplier").value;
+  const contractType = document.getElementById("add-contract-type").value;
+  const startDate = document.getElementById("add-start-date").value;
+  const endDate = document.getElementById("add-end-date").value;
+  const value = document.getElementById("add-value").value;
+  const status = document.getElementById("add-status").value;
+  const autoRenewal = document.getElementById("add-auto-renewal").checked;
+  const notes = document.getElementById("add-notes").value;
+  
+  // Validate form
+  if (!supplier || !contractType || !startDate || !endDate || !value) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+  
+  // Generate a new contract ID
+  const date = new Date();
+  const year = date.getFullYear();
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  const newId = `SC-${year}-${randomNum}`;
+  
+  // Find the table
+  const table = document.getElementById("contractsTable");
+  if (table) {
+    const tbody = table.querySelector("tbody");
+    if (tbody) {
+      // Create new row for the contract
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>${newId}</td>
+        <td>${supplier}</td>
+        <td>${contractType}</td>
+        <td>${formatDate(startDate)}</td>
+        <td>${formatDate(endDate)}</td>
+        <td>₹${Number.parseFloat(value).toFixed(2)}</td>
+        <td><span class="badge bg-${getStatusBadgeColor(status)}">${status}</span></td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+            ${status === "Expired" ? '<button class="btn btn-sm btn-warning"><i class="fas fa-redo"></i></button>' : ''}
+            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      `;
+      
+      // Insert at the beginning of the table
+      tbody.insertBefore(newRow, tbody.firstChild);
+      
+      // Close the modal
+      const bootstrap = window.bootstrap;
+      const modal = document.getElementById("addContractModal");
+      if (modal) {
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+          modalInstance.hide();
+        } else {
+          const newModalInstance = new bootstrap.Modal(modal);
+          newModalInstance.hide();
+        }
+      }
+      
+      // Reset the form
+      document.getElementById("add-contract-form").reset();
+      
+      // Set default dates again
+      const startDateInput = document.getElementById("add-start-date");
+      const endDateInput = document.getElementById("add-end-date");
+      
+      if (startDateInput && endDateInput) {
+        const today = new Date();
+        startDateInput.value = formatDateForInput(today);
+        
+        const nextYear = new Date(today);
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        endDateInput.value = formatDateForInput(nextYear);
+      }
+      
+      // Reinitialize action buttons
+      setTimeout(() => {
+        initContractActions();
+      }, 100);
+      
+      alert("Contract added successfully!");
+    }
+  }
 }
 
 // Function to initialize search functionality for contracts
@@ -354,7 +545,7 @@ function viewContract(id) {
               <p><strong>Start Date:</strong> ${formatDate(contractDetails.startDate)}</p>
               <p><strong>End Date:</strong> ${formatDate(contractDetails.endDate)}</p>
               <p><strong>Duration:</strong> ${durationMonths} months</p>
-              <p><strong>Contract Value:</strong> $${contractDetails.value}</p>
+              <p><strong>Contract Value:</strong> ₹${contractDetails.value}</p>
               <p><strong>Status:</strong> <span class="badge bg-${getStatusBadgeColor(contractDetails.status)}">${contractDetails.status}</span></p>
             </div>
             <div class="col-md-6">
@@ -561,7 +752,7 @@ function saveEditedContract() {
         row.cells[2].textContent = contractType
         row.cells[3].textContent = formatDate(startDate)
         row.cells[4].textContent = formatDate(endDate)
-        row.cells[5].textContent = "$" + Number.parseFloat(value).toFixed(2)
+        row.cells[5].textContent = "₹" + Number.parseFloat(value).toFixed(2)
 
         // Update status badge
         const statusBadge = row.cells[6].querySelector(".badge")
@@ -772,7 +963,7 @@ function saveRenewedContract() {
         <td>${contractType}</td>
         <td>${formatDate(startDate)}</td>
         <td>${formatDate(endDate)}</td>
-        <td>$${Number.parseFloat(value).toFixed(2)}</td>
+        <td>₹${Number.parseFloat(value).toFixed(2)}</td>
         <td><span class="badge bg-success">Active</span></td>
         <td>
           <div class="btn-group">
@@ -859,16 +1050,16 @@ function fetchContractDetails(id) {
             ? "Maintenance Contract"
             : "Purchase Agreement",
     startDate: id.includes("1001")
-      ? "2023-01-01"
+      ? "2024-01-01"
       : id.includes("1002")
-        ? "2023-02-15"
+        ? "2024-02-15"
         : id.includes("1003")
-          ? "2023-03-01"
+          ? "2024-03-01"
           : id.includes("1004")
             ? "2022-01-01"
-            : "2023-04-01",
+            : "2024-04-01",
     endDate: id.includes("1001")
-      ? "2023-12-31"
+      ? "2024-12-31"
       : id.includes("1002")
         ? "2024-02-14"
         : id.includes("1003")
@@ -970,4 +1161,3 @@ function updateSidebarActiveState(contentType) {
     }
   }
 }
-

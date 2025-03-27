@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })
 
-// Function to handle purchase order menu click
+// Function to handle purchase order menu click - renamed to be unique
 function handlePurchaseOrderClick() {
   // Hide all content sections first
   const allContentSections = document.querySelectorAll("#main-content > div")
@@ -40,7 +40,7 @@ function handlePurchaseOrderClick() {
   }
 
   // Update active state in sidebar
-  updateSidebarActiveState("purchase-order")
+  updatePurchaseOrderSidebarState("purchase-order")
 
   // Close sidebar on mobile after navigation
   if (window.innerWidth < 768) {
@@ -77,7 +77,7 @@ function createPurchaseOrderContent() {
     </div>
     <div class="col-md-6">
       <div class="d-flex gap-2 justify-content-end">
-        <select id="statusFilter" class="form-select" style="width: auto;">
+        <select id="poStatusFilter" class="form-select" style="width: auto;">
           <option value="all">All Statuses</option>
           <option value="Draft">Draft</option>
           <option value="Pending">Pending Approval</option>
@@ -85,7 +85,7 @@ function createPurchaseOrderContent() {
           <option value="Rejected">Rejected</option>
           <option value="Completed">Completed</option>
         </select>
-        <select id="dateFilter" class="form-select" style="width: auto;">
+        <select id="poDateFilter" class="form-select" style="width: auto;">
           <option value="all">All Dates</option>
           <option value="today">Today</option>
           <option value="week">This Week</option>
@@ -139,7 +139,11 @@ function createPurchaseOrderContent() {
                 <label for="poSupplier" class="form-label">Supplier*</label>
                 <select class="form-select" id="poSupplier" required>
                   <option value="">Select Supplier</option>
-                  <!-- Suppliers will be loaded here -->
+                  <option value="ABC Suppliers">ABC Suppliers</option>
+                  <option value="XYZ Corporation">XYZ Corporation</option>
+                  <option value="Global Traders">Global Traders</option>
+                  <option value="Tech Solutions">Tech Solutions</option>
+                  <option value="Office Supplies Inc.">Office Supplies Inc.</option>
                 </select>
               </div>
               <div class="col-md-6">
@@ -188,24 +192,24 @@ function createPurchaseOrderContent() {
                 <tfoot>
                   <tr>
                     <td colspan="5">
-                      <button type="button" class="btn btn-sm btn-secondary" id="addItemBtn">
+                      <button type="button" class="btn btn-sm btn-secondary" id="addPoItemBtn">
                         <i class="fas fa-plus"></i> Add Item
                       </button>
                     </td>
                   </tr>
                   <tr>
                     <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
-                    <td id="poSubtotal">$0.00</td>
+                    <td id="poSubtotal">₹0.00</td>
                     <td></td>
                   </tr>
                   <tr>
                     <td colspan="3" class="text-end"><strong>Tax (10%):</strong></td>
-                    <td id="poTax">$0.00</td>
+                    <td id="poTax">₹0.00</td>
                     <td></td>
                   </tr>
                   <tr>
                     <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                    <td id="poTotal">$0.00</td>
+                    <td id="poTotal">₹0.00</td>
                     <td></td>
                   </tr>
                 </tfoot>
@@ -240,8 +244,8 @@ function createPurchaseOrderContent() {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-success" id="approveOrderBtn" style="display: none;">Approve</button>
-          <button type="button" class="btn btn-danger" id="rejectOrderBtn" style="display: none;">Reject</button>
+          <button type="button" class="btn btn-success" id="approvePoOrderBtn" style="display: none;">Approve</button>
+          <button type="button" class="btn btn-danger" id="rejectPoOrderBtn" style="display: none;">Reject</button>
         </div>
       </div>
     </div>
@@ -290,8 +294,8 @@ const samplePurchaseOrders = [
     id: 1001,
     supplier: "ABC Supplies Inc.",
     supplierId: 1,
-    date: "2023-06-15",
-    deliveryDate: "2023-06-30",
+    date: "2024-06-15",
+    deliveryDate: "2024-06-30",
     status: "Approved",
     notes: "Regular quarterly order",
     items: [
@@ -306,8 +310,8 @@ const samplePurchaseOrders = [
     id: 1002,
     supplier: "Global Tech Solutions",
     supplierId: 2,
-    date: "2023-07-01",
-    deliveryDate: "2023-07-15",
+    date: "2024-07-01",
+    deliveryDate: "2024-07-15",
     status: "Pending",
     notes: "Urgent IT equipment order",
     items: [
@@ -322,8 +326,8 @@ const samplePurchaseOrders = [
     id: 1003,
     supplier: "EcoFriendly Materials",
     supplierId: 3,
-    date: "2023-07-10",
-    deliveryDate: "2023-07-25",
+    date: "2024-07-10",
+    deliveryDate: "2024-07-25",
     status: "Draft",
     notes: "Sustainable packaging materials",
     items: [
@@ -338,8 +342,8 @@ const samplePurchaseOrders = [
     id: 1004,
     supplier: "Premium Parts Ltd",
     supplierId: 5,
-    date: "2023-08-05",
-    deliveryDate: "2023-08-20",
+    date: "2024-08-05",
+    deliveryDate: "2024-08-20",
     status: "Rejected",
     notes: "Budget exceeded, needs revision",
     items: [
@@ -354,8 +358,8 @@ const samplePurchaseOrders = [
     id: 1005,
     supplier: "Quick Logistics",
     supplierId: 4,
-    date: "2023-08-15",
-    deliveryDate: "2023-08-25",
+    date: "2024-08-15",
+    deliveryDate: "2024-08-25",
     status: "Completed",
     notes: "Shipping supplies for Q3",
     items: [
@@ -374,14 +378,14 @@ function initPurchaseOrderManagement() {
   loadPurchaseOrders()
 
   // Load suppliers for dropdown
-  loadSuppliersDropdown()
+  loadPurchaseOrderSuppliersDropdown()
 
   // Add event listener for search input
   document.getElementById("purchaseOrderSearchInput").addEventListener("input", searchPurchaseOrders)
 
   // Add event listeners for filters
-  document.getElementById("statusFilter").addEventListener("change", filterPurchaseOrders)
-  document.getElementById("dateFilter").addEventListener("change", filterPurchaseOrders)
+  document.getElementById("poStatusFilter").addEventListener("change", filterPurchaseOrders)
+  document.getElementById("poDateFilter").addEventListener("change", filterPurchaseOrders)
 
   // Add event listener for add purchase order button
   document.getElementById("addPurchaseOrderBtn").addEventListener("click", () => {
@@ -396,7 +400,7 @@ function initPurchaseOrderManagement() {
     itemsTableBody.innerHTML = ""
 
     // Reset totals
-    updateOrderTotals()
+    updatePurchaseOrderTotals()
 
     // Show the modal
     const purchaseOrderModal = new bootstrap.Modal(document.getElementById("purchaseOrderModal"))
@@ -404,7 +408,7 @@ function initPurchaseOrderManagement() {
   })
 
   // Add event listener for add item button
-  document.getElementById("addItemBtn").addEventListener("click", addItemRow)
+  document.getElementById("addPoItemBtn").addEventListener("click", addPurchaseOrderItemRow)
 
   // Add event listener for save purchase order button
   document.getElementById("savePurchaseOrderBtn").addEventListener("click", savePurchaseOrder)
@@ -413,13 +417,13 @@ function initPurchaseOrderManagement() {
   document.getElementById("confirmDeletePurchaseOrderBtn").addEventListener("click", deletePurchaseOrder)
 
   // Add event listeners for approve/reject buttons
-  document.getElementById("approveOrderBtn").addEventListener("click", () => updateOrderStatus("Approved"))
-  document.getElementById("rejectOrderBtn").addEventListener("click", () => updateOrderStatus("Rejected"))
+  document.getElementById("approvePoOrderBtn").addEventListener("click", () => updatePurchaseOrderStatus("Approved"))
+  document.getElementById("rejectPoOrderBtn").addEventListener("click", () => updatePurchaseOrderStatus("Rejected"))
 }
 
 // Function to load suppliers dropdown
-function loadSuppliersDropdown() {
-  const suppliers = getSuppliersFromStorage()
+function loadPurchaseOrderSuppliersDropdown() {
+  const suppliers = getPurchaseOrderSuppliersFromStorage()
   const supplierSelect = document.getElementById("poSupplier")
 
   // Clear existing options except the first one
@@ -439,7 +443,7 @@ function loadSuppliersDropdown() {
 }
 
 // Function to get suppliers from storage
-function getSuppliersFromStorage() {
+function getPurchaseOrderSuppliersFromStorage() {
   const suppliers = localStorage.getItem("suppliers")
   return suppliers
     ? JSON.parse(suppliers)
@@ -473,15 +477,15 @@ function getSuppliersFromStorage() {
 }
 
 // Function to add an item row to the purchase order form
-function addItemRow() {
+function addPurchaseOrderItemRow() {
   const itemsTableBody = document.getElementById("poItemsTableBody")
   const newRow = document.createElement("tr")
   newRow.innerHTML = `
     <td><input type="text" class="form-control item-description" placeholder="Item description" required></td>
     <td><input type="number" class="form-control item-quantity" placeholder="Qty" min="1" value="1" required></td>
     <td><input type="number" class="form-control item-price" placeholder="Price" min="0" step="0.01" value="0.00" required></td>
-    <td class="item-total">$0.00</td>
-    <td><button type="button" class="btn btn-sm btn-danger remove-item"><i class="fas fa-trash"></i></button></td>
+    <td class="item-total">₹0.00</td>
+    <td><button type="button" class="btn btn-sm btn-danger remove-po-item"><i class="fas fa-trash"></i></button></td>
   `
 
   itemsTableBody.appendChild(newRow)
@@ -489,41 +493,41 @@ function addItemRow() {
   // Add event listeners for the new row
   const quantityInput = newRow.querySelector(".item-quantity")
   const priceInput = newRow.querySelector(".item-price")
-  const removeButton = newRow.querySelector(".remove-item")
+  const removeButton = newRow.querySelector(".remove-po-item")
 
-  quantityInput.addEventListener("input", updateItemTotal)
-  priceInput.addEventListener("input", updateItemTotal)
+  quantityInput.addEventListener("input", updatePurchaseOrderItemTotal)
+  priceInput.addEventListener("input", updatePurchaseOrderItemTotal)
   removeButton.addEventListener("click", () => {
     newRow.remove()
-    updateOrderTotals()
+    updatePurchaseOrderTotals()
   })
 }
 
 // Function to update an item's total
-function updateItemTotal(event) {
+function updatePurchaseOrderItemTotal(event) {
   const row = event.target.closest("tr")
   const quantity = Number.parseFloat(row.querySelector(".item-quantity").value) || 0
   const price = Number.parseFloat(row.querySelector(".item-price").value) || 0
   const total = quantity * price
 
-  row.querySelector(".item-total").textContent = "$" + total.toFixed(2)
+  row.querySelector(".item-total").textContent = "₹" + total.toFixed(2)
 
-  updateOrderTotals()
+  updatePurchaseOrderTotals()
 }
 
 // Function to update order totals
-function updateOrderTotals() {
+function updatePurchaseOrderTotals() {
   const itemTotals = Array.from(document.querySelectorAll(".item-total")).map((el) => {
-    return Number.parseFloat(el.textContent.replace("$", "")) || 0
+    return Number.parseFloat(el.textContent.replace("₹", "")) || 0
   })
 
   const subtotal = itemTotals.reduce((sum, total) => sum + total, 0)
   const tax = subtotal * 0.1 // 10% tax
   const total = subtotal + tax
 
-  document.getElementById("poSubtotal").textContent = "$" + subtotal.toFixed(2)
-  document.getElementById("poTax").textContent = "$" + tax.toFixed(2)
-  document.getElementById("poTotal").textContent = "$" + total.toFixed(2)
+  document.getElementById("poSubtotal").textContent = "₹" + subtotal.toFixed(2)
+  document.getElementById("poTax").textContent = "₹" + tax.toFixed(2)
+  document.getElementById("poTotal").textContent = "₹" + total.toFixed(2)
 }
 
 // Function to load purchase orders data
@@ -537,17 +541,17 @@ function loadPurchaseOrders(filteredOrders = null) {
     row.innerHTML = `
       <td>${order.id}</td>
       <td>${order.supplier}</td>
-      <td>${formatDate(order.date)}</td>
-      <td>$${order.total.toFixed(2)}</td>
-      <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+      <td>${formatPurchaseOrderDate(order.date)}</td>
+      <td>₹${order.total.toFixed(2)}</td>
+      <td><span class="badge ${getPurchaseOrderStatusBadgeClass(order.status)}">${order.status}</span></td>
       <td>
-        <button class="btn btn-sm btn-info view-order" data-id="${order.id}">
+        <button class="btn btn-sm btn-info view-po-order" data-id="${order.id}">
           <i class="fas fa-eye"></i>
         </button>
-        <button class="btn btn-sm btn-primary edit-order" data-id="${order.id}" ${order.status === "Completed" ? "disabled" : ""}>
+        <button class="btn btn-sm btn-primary edit-po-order" data-id="${order.id}" ${order.status === "Completed" ? "disabled" : ""}>
           <i class="fas fa-edit"></i>
         </button>
-        <button class="btn btn-sm btn-danger delete-order" data-id="${order.id}" ${order.status === "Completed" || order.status === "Approved" ? "disabled" : ""}>
+        <button class="btn btn-sm btn-danger delete-po-order" data-id="${order.id}" ${order.status === "Completed" || order.status === "Approved" ? "disabled" : ""}>
           <i class="fas fa-trash"></i>
         </button>
       </td>
@@ -556,17 +560,17 @@ function loadPurchaseOrders(filteredOrders = null) {
   })
 
   // Add event listeners for action buttons
-  addActionButtonListeners()
+  addPurchaseOrderActionButtonListeners()
 }
 
 // Function to format date
-function formatDate(dateString) {
+function formatPurchaseOrderDate(dateString) {
   const options = { year: "numeric", month: "short", day: "numeric" }
   return new Date(dateString).toLocaleDateString(undefined, options)
 }
 
 // Function to get status badge class
-function getStatusBadgeClass(status) {
+function getPurchaseOrderStatusBadgeClass(status) {
   switch (status) {
     case "Approved":
       return "bg-success"
@@ -584,9 +588,9 @@ function getStatusBadgeClass(status) {
 }
 
 // Function to add event listeners for action buttons
-function addActionButtonListeners() {
+function addPurchaseOrderActionButtonListeners() {
   // View order buttons
-  document.querySelectorAll(".view-order").forEach((button) => {
+  document.querySelectorAll(".view-po-order").forEach((button) => {
     button.addEventListener("click", (e) => {
       const orderId = e.currentTarget.getAttribute("data-id")
       viewPurchaseOrder(orderId)
@@ -594,7 +598,7 @@ function addActionButtonListeners() {
   })
 
   // Edit order buttons
-  document.querySelectorAll(".edit-order").forEach((button) => {
+  document.querySelectorAll(".edit-po-order").forEach((button) => {
     button.addEventListener("click", (e) => {
       const orderId = e.currentTarget.getAttribute("data-id")
       editPurchaseOrder(orderId)
@@ -602,7 +606,7 @@ function addActionButtonListeners() {
   })
 
   // Delete order buttons
-  document.querySelectorAll(".delete-order").forEach((button) => {
+  document.querySelectorAll(".delete-po-order").forEach((button) => {
     button.addEventListener("click", (e) => {
       const orderId = e.currentTarget.getAttribute("data-id")
       confirmDeletePurchaseOrder(orderId)
@@ -625,8 +629,8 @@ function viewPurchaseOrder(orderId) {
         <tr>
           <td>${item.description}</td>
           <td>${item.quantity}</td>
-          <td>$${item.unitPrice.toFixed(2)}</td>
-          <td>$${item.total.toFixed(2)}</td>
+          <td>₹${item.unitPrice.toFixed(2)}</td>
+          <td>₹${item.total.toFixed(2)}</td>
         </tr>
       `
     })
@@ -636,12 +640,12 @@ function viewPurchaseOrder(orderId) {
         <div class="col-md-6">
           <h6>Purchase Order #${order.id}</h6>
           <p><strong>Supplier:</strong> ${order.supplier}</p>
-          <p><strong>Date:</strong> ${formatDate(order.date)}</p>
-          <p><strong>Expected Delivery:</strong> ${order.deliveryDate ? formatDate(order.deliveryDate) : "Not specified"}</p>
+          <p><strong>Date:</strong> ${formatPurchaseOrderDate(order.date)}</p>
+          <p><strong>Expected Delivery:</strong> ${order.deliveryDate ? formatPurchaseOrderDate(order.deliveryDate) : "Not specified"}</p>
         </div>
         <div class="col-md-6 text-md-end">
-          <p><strong>Status:</strong> <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
-          <p><strong>Total Amount:</strong> $${order.total.toFixed(2)}</p>
+          <p><strong>Status:</strong> <span class="badge ${getPurchaseOrderStatusBadgeClass(order.status)}">${order.status}</span></p>
+          <p><strong>Total Amount:</strong> ₹${order.total.toFixed(2)}</p>
         </div>
       </div>
       
@@ -668,15 +672,15 @@ function viewPurchaseOrder(orderId) {
           <tfoot>
             <tr>
               <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
-              <td>$${order.subtotal.toFixed(2)}</td>
+              <td>₹${order.subtotal.toFixed(2)}</td>
             </tr>
             <tr>
               <td colspan="3" class="text-end"><strong>Tax (10%):</strong></td>
-              <td>$${order.tax.toFixed(2)}</td>
+              <td>₹${order.tax.toFixed(2)}</td>
             </tr>
             <tr>
               <td colspan="3" class="text-end"><strong>Total:</strong></td>
-              <td>$${order.total.toFixed(2)}</td>
+              <td>₹${order.total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
@@ -684,8 +688,8 @@ function viewPurchaseOrder(orderId) {
     `
 
     // Show/hide approve/reject buttons based on status
-    const approveBtn = document.getElementById("approveOrderBtn")
-    const rejectBtn = document.getElementById("rejectOrderBtn")
+    const approveBtn = document.getElementById("approvePoOrderBtn")
+    const rejectBtn = document.getElementById("rejectPoOrderBtn")
 
     if (order.status === "Pending") {
       approveBtn.style.display = "inline-block"
@@ -699,7 +703,8 @@ function viewPurchaseOrder(orderId) {
       rejectBtn.style.display = "none"
     }
 
-    // Declare bootstrap variable
+    // Show the modal
+    const bootstrap = window.bootstrap
     const viewModalElement = document.getElementById("viewPurchaseOrderModal")
     const viewModal = new bootstrap.Modal(viewModalElement)
     viewModal.show()
@@ -731,8 +736,8 @@ function editPurchaseOrder(orderId) {
         <td><input type="text" class="form-control item-description" value="${item.description}" required></td>
         <td><input type="number" class="form-control item-quantity" value="${item.quantity}" min="1" required></td>
         <td><input type="number" class="form-control item-price" value="${item.unitPrice.toFixed(2)}" min="0" step="0.01" required></td>
-        <td class="item-total">$${item.total.toFixed(2)}</td>
-        <td><button type="button" class="btn btn-sm btn-danger remove-item"><i class="fas fa-trash"></i></button></td>
+        <td class="item-total">₹${item.total.toFixed(2)}</td>
+        <td><button type="button" class="btn btn-sm btn-danger remove-po-item"><i class="fas fa-trash"></i></button></td>
       `
 
       itemsTableBody.appendChild(newRow)
@@ -740,23 +745,24 @@ function editPurchaseOrder(orderId) {
       // Add event listeners for the new row
       const quantityInput = newRow.querySelector(".item-quantity")
       const priceInput = newRow.querySelector(".item-price")
-      const removeButton = newRow.querySelector(".remove-item")
+      const removeButton = newRow.querySelector(".remove-po-item")
 
-      quantityInput.addEventListener("input", updateItemTotal)
-      priceInput.addEventListener("input", updateItemTotal)
+      quantityInput.addEventListener("input", updatePurchaseOrderItemTotal)
+      priceInput.addEventListener("input", updatePurchaseOrderItemTotal)
       removeButton.addEventListener("click", () => {
         newRow.remove()
-        updateOrderTotals()
+        updatePurchaseOrderTotals()
       })
     })
 
     // Update totals
-    updateOrderTotals()
+    updatePurchaseOrderTotals()
 
     // Update modal title
     document.getElementById("purchaseOrderModalLabel").textContent = "Edit Purchase Order"
 
     // Show the modal
+    const bootstrap = window.bootstrap
     const purchaseOrderModal = new bootstrap.Modal(document.getElementById("purchaseOrderModal"))
     purchaseOrderModal.show()
   }
@@ -765,6 +771,7 @@ function editPurchaseOrder(orderId) {
 // Function to confirm delete purchase order
 function confirmDeletePurchaseOrder(orderId) {
   document.getElementById("deletePurchaseOrderIdInput").value = orderId
+  const bootstrap = window.bootstrap
   const deleteModal = new bootstrap.Modal(document.getElementById("deletePurchaseOrderModal"))
   deleteModal.show()
 }
@@ -781,6 +788,7 @@ function deletePurchaseOrder() {
   savePurchaseOrdersToStorage(orders)
 
   // Close the modal
+  const bootstrap = window.bootstrap
   const deleteModalInstance = bootstrap.Modal.getInstance(document.getElementById("deletePurchaseOrderModal"))
   if (deleteModalInstance) {
     deleteModalInstance.hide()
@@ -791,9 +799,10 @@ function deletePurchaseOrder() {
 }
 
 // Function to update order status (approve/reject)
-function updateOrderStatus(newStatus) {
+function updatePurchaseOrderStatus(newStatus) {
+  const bootstrap = window.bootstrap
   const viewModal = bootstrap.Modal.getInstance(document.getElementById("viewPurchaseOrderModal"))
-  const orderId = document.getElementById("approveOrderBtn").getAttribute("data-id")
+  const orderId = document.getElementById("approvePoOrderBtn").getAttribute("data-id")
   const orders = getPurchaseOrdersFromStorage()
 
   // Find and update the order
@@ -916,6 +925,7 @@ function savePurchaseOrder() {
   savePurchaseOrdersToStorage(orders)
 
   // Close the modal
+  const bootstrap = window.bootstrap
   const purchaseOrderModalInstance = bootstrap.Modal.getInstance(document.getElementById("purchaseOrderModal"))
   if (purchaseOrderModalInstance) {
     purchaseOrderModalInstance.hide()
@@ -927,19 +937,19 @@ function savePurchaseOrder() {
 
 // Function to search purchase orders
 function searchPurchaseOrders() {
-  applyFilters()
+  applyPurchaseOrderFilters()
 }
 
 // Function to filter purchase orders
 function filterPurchaseOrders() {
-  applyFilters()
+  applyPurchaseOrderFilters()
 }
 
 // Function to apply all filters and search
-function applyFilters() {
+function applyPurchaseOrderFilters() {
   const searchTerm = document.getElementById("purchaseOrderSearchInput").value.toLowerCase()
-  const statusFilter = document.getElementById("statusFilter").value
-  const dateFilter = document.getElementById("dateFilter").value
+  const statusFilter = document.getElementById("poStatusFilter").value
+  const dateFilter = document.getElementById("poDateFilter").value
 
   const orders = getPurchaseOrdersFromStorage()
 
@@ -1005,7 +1015,7 @@ function savePurchaseOrdersToStorage(orders) {
 }
 
 // Function to update sidebar active state
-function updateSidebarActiveState(contentType) {
+function updatePurchaseOrderSidebarState(contentType) {
   // Remove active class from all sidebar items
   document.querySelectorAll("#sidebar ul li").forEach((item) => {
     item.classList.remove("active")
@@ -1038,3 +1048,12 @@ function updateSidebarActiveState(contentType) {
   }
 }
 
+// Function to remove a purchase order item - needed for the remove button
+function removePurchaseOrderItem(rowId) {
+  document.getElementById(rowId).remove()
+  updatePurchaseOrderTotals()
+}
+
+// Make these functions globally available for event handlers
+window.updatePurchaseOrderItemTotal = updatePurchaseOrderItemTotal
+window.removePurchaseOrderItem = removePurchaseOrderItem

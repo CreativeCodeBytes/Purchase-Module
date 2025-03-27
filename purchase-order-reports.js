@@ -15,30 +15,30 @@ document.addEventListener("DOMContentLoaded", function() {
   let purchaseOrderReports = [
     { 
       id: 1, 
-      date: '2023-12-18', 
+      date: '2024-12-18', 
       supplier: 'ABC Supplies', 
       products: 'Office Furniture, Stationery', 
       cost: 8500.00, 
       status: 'Pending',
-      poNumber: 'PO-2023-001'
+      poNumber: 'PO-2024-001'
     },
     { 
       id: 2, 
-      date: '2023-12-12', 
+      date: '2024-12-12', 
       supplier: 'XYZ Manufacturing', 
       products: 'Raw Materials, Packaging', 
       cost: 15750.00, 
       status: 'Approved',
-      poNumber: 'PO-2023-002'
+      poNumber: 'PO-2024-002'
     },
     { 
       id: 3, 
-      date: '2023-12-08', 
+      date: '2024-12-08', 
       supplier: 'Tech Solutions', 
       products: 'Computer Equipment, Software Licenses', 
       cost: 12300.00, 
       status: 'Rejected',
-      poNumber: 'PO-2023-003'
+      poNumber: 'PO-2024-003'
     }
   ];
   

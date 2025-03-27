@@ -7,6 +7,9 @@ function initSupplierReturnPolicy() {
   // Initialize search functionality
   initReturnPolicySearch()
 
+  // Create Add Return Policy Modal if it doesn't exist
+  createAddReturnPolicyModal()
+
   // Initialize action buttons
   initReturnPolicyActions()
 }
@@ -15,17 +18,25 @@ function initSupplierReturnPolicy() {
 function initReturnPolicySearch() {
   const searchInput = document.querySelector("#supplier-return-content .input-group input[type='text']")
   if (searchInput) {
-    searchInput.addEventListener("keypress", function (e) {
+    // Remove existing event listeners to prevent duplicates
+    const newSearchInput = searchInput.cloneNode(true)
+    searchInput.parentNode.replaceChild(newSearchInput, searchInput)
+    
+    newSearchInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         e.preventDefault()
         searchReturnPolicies(this.value)
       }
     })
 
-    const searchButton = searchInput.nextElementSibling
+    const searchButton = newSearchInput.nextElementSibling
     if (searchButton) {
-      searchButton.addEventListener("click", () => {
-        searchReturnPolicies(searchInput.value)
+      // Remove existing event listeners to prevent duplicates
+      const newSearchButton = searchButton.cloneNode(true)
+      searchButton.parentNode.replaceChild(newSearchButton, searchButton)
+      
+      newSearchButton.addEventListener("click", () => {
+        searchReturnPolicies(newSearchInput.value)
       })
     }
   } else {
@@ -73,6 +84,9 @@ function searchReturnPolicies(searchTerm) {
 
 // Function to initialize action buttons for return policies
 function initReturnPolicyActions() {
+  // First, remove any existing event listeners to prevent duplicates
+  removeExistingActionListeners()
+  
   // View buttons
   document.querySelectorAll("#returnsTable .btn-info").forEach((btn) => {
     if (!btn.hasAttribute("data-initialized")) {
@@ -114,72 +128,312 @@ function initReturnPolicyActions() {
       })
     }
   })
+
+  // Add Return Policy button - IMPORTANT: We're removing the data attributes and using only JS
+  const addButton = document.querySelector("#supplier-return-content .card-header button")
+  if (addButton) {
+    // Remove data attributes to prevent double-opening
+    addButton.removeAttribute("data-bs-toggle")
+    addButton.removeAttribute("data-bs-target")
+    
+    // Remove existing event listeners to prevent duplicates
+    const newAddButton = addButton.cloneNode(true)
+    addButton.parentNode.replaceChild(newAddButton, addButton)
+    
+    newAddButton.addEventListener("click", function(e) {
+      e.preventDefault()
+      
+      // Show the modal using JavaScript
+      const bootstrap = window.bootstrap
+      const modal = document.getElementById("addReturnPolicyModal")
+      if (modal) {
+        const modalInstance = new bootstrap.Modal(modal)
+        modalInstance.show()
+      }
+    })
+  }
+}
+
+// Function to remove existing action listeners to prevent duplicates
+function removeExistingActionListeners() {
+  // For table action buttons, clone and replace to remove event listeners
+  document.querySelectorAll("#returnsTable .btn-group").forEach((btnGroup) => {
+    const newBtnGroup = btnGroup.cloneNode(true)
+    btnGroup.parentNode.replaceChild(newBtnGroup, btnGroup)
+  })
+  
+  // Reset data-initialized attributes
+  document.querySelectorAll("#returnsTable [data-initialized]").forEach((el) => {
+    el.removeAttribute("data-initialized")
+  })
+}
+
+// Function to create the Add Return Policy Modal
+function createAddReturnPolicyModal() {
+  // Remove existing modal if it exists to prevent duplicates
+  const existingModal = document.getElementById("addReturnPolicyModal")
+  if (existingModal) {
+    existingModal.remove()
+  }
+
+  // Create modal element
+  const modal = document.createElement("div")
+  modal.id = "addReturnPolicyModal"
+  modal.className = "modal fade"
+  modal.setAttribute("tabindex", "-1")
+  modal.setAttribute("aria-labelledby", "addReturnPolicyModalLabel")
+  modal.setAttribute("aria-hidden", "true")
+
+  // Set modal content
+  modal.innerHTML = `
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="addReturnPolicyModalLabel">Add New Return Policy</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add-return-policy-form">
+            <div class="mb-3">
+              <label for="add-supplier" class="form-label">Supplier</label>
+              <select class="form-select" id="add-supplier" name="supplier" required>
+                <option value="">Select Supplier</option>
+                <option value="ABC Suppliers">ABC Suppliers</option>
+                <option value="XYZ Corporation">XYZ Corporation</option>
+                <option value="Global Traders">Global Traders</option>
+                <option value="Tech Solutions">Tech Solutions</option>
+                <option value="Office Supplies Inc.">Office Supplies Inc.</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="add-policy-name" class="form-label">Policy Name</label>
+              <input type="text" class="form-control" id="add-policy-name" name="policyName" required>
+            </div>
+            <div class="mb-3">
+              <label for="add-category" class="form-label">Product Category</label>
+              <select class="form-select" id="add-category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Stationery">Stationery</option>
+                <option value="IT Equipment">IT Equipment</option>
+                <option value="All Products">All Products</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="add-return-period" class="form-label">Return Period (days)</label>
+              <input type="number" class="form-control" id="add-return-period" name="returnPeriod" min="1" value="14" required>
+            </div>
+            <div class="mb-3">
+              <label for="add-restocking-fee" class="form-label">Restocking Fee (%)</label>
+              <input type="number" class="form-control" id="add-restocking-fee" name="restockingFee" min="0" max="100" step="0.01" value="0" required>
+            </div>
+            <div class="mb-3">
+              <label for="add-status" class="form-label">Status</label>
+              <select class="form-select" id="add-status" name="status" required>
+                <option value="Active" selected>Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="add-conditions" class="form-label">Conditions</label>
+              <textarea class="form-control" id="add-conditions" name="conditions" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-new-policy-btn">Save Policy</button>
+        </div>
+      </div>
+    </div>
+  `
+
+  // Add modal to body
+  document.body.appendChild(modal)
+  
+  // Add event listener to the Save Policy button
+  const saveButton = modal.querySelector("#save-new-policy-btn")
+  if (saveButton) {
+    saveButton.addEventListener("click", saveNewReturnPolicy)
+  }
+}
+
+// Function to save a new return policy
+function saveNewReturnPolicy() {
+  // Get form values
+  const supplier = document.getElementById("add-supplier").value
+  const policyName = document.getElementById("add-policy-name").value
+  const category = document.getElementById("add-category").value
+  const returnPeriod = document.getElementById("add-return-period").value
+  const restockingFee = document.getElementById("add-restocking-fee").value
+  const status = document.getElementById("add-status").value
+  const conditions = document.getElementById("add-conditions").value
+
+  // Validate form
+  if (!supplier || !policyName || !category || !returnPeriod) {
+    alert("Please fill in all required fields.")
+    return
+  }
+
+  // Generate a new policy ID
+  const table = document.getElementById("returnsTable")
+  let newId = "RP-1001"
+  
+  if (table) {
+    const rows = table.querySelectorAll("tbody tr")
+    if (rows.length > 0) {
+      // Find the highest existing ID and increment
+      let maxId = 1000
+      rows.forEach(row => {
+        const idText = row.cells[0].textContent
+        const idNum = parseInt(idText.replace("RP-", ""))
+        if (idNum > maxId) {
+          maxId = idNum
+        }
+      })
+      newId = "RP-" + (maxId + 1)
+    }
+  }
+
+  // First, close the modal to prevent UI freezing
+  const bootstrap = window.bootstrap
+  const modal = document.getElementById("addReturnPolicyModal")
+  if (modal) {
+    const modalInstance = bootstrap.Modal.getInstance(modal)
+    if (modalInstance) {
+      modalInstance.hide()
+    }
+  }
+
+  // Add new row to table after a short delay to ensure modal is closed
+  setTimeout(() => {
+    if (table) {
+      const tbody = table.querySelector("tbody")
+      if (tbody) {
+        const newRow = document.createElement("tr")
+        newRow.innerHTML = `
+          <td>${newId}</td>
+          <td>${supplier}</td>
+          <td>${policyName}</td>
+          <td>${category}</td>
+          <td>${returnPeriod} days</td>
+          <td>${restockingFee}%</td>
+          <td><span class="badge bg-${status === 'Active' ? 'success' : 'danger'}">${status}</span></td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-info"><i class="fas fa-eye"></i></button>
+              <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        `
+        tbody.appendChild(newRow)
+        
+        // Reset the form
+        document.getElementById("add-return-policy-form").reset()
+        
+        // Re-initialize action buttons after a short delay
+        setTimeout(() => {
+          initReturnPolicyActions()
+          
+          // Show success message
+          alert("Return policy added successfully!")
+        }, 100)
+      }
+    }
+  }, 300)
 }
 
 // Function to view return policy details
 function viewReturnPolicy(id) {
+  // Remove existing modal if it exists to prevent duplicates
+  const existingModal = document.getElementById("return-policy-details-modal")
+  if (existingModal) {
+    existingModal.remove()
+  }
+
   // Fetch return policy details (simulated)
   const policyDetails = fetchReturnPolicyDetails(id)
 
-  // Create modal if it doesn't exist
-  let modal = document.getElementById("return-policy-details-modal")
-
-  if (!modal) {
-    modal = document.createElement("div")
-    modal.id = "return-policy-details-modal"
-    modal.className = "modal fade"
-    modal.setAttribute("tabindex", "-1")
-    modal.setAttribute("aria-labelledby", "returnPolicyDetailsModalLabel")
-    modal.setAttribute("aria-hidden", "true")
-
-    // Add modal to body
-    document.body.appendChild(modal)
-  }
+  // Create modal
+  const modal = document.createElement("div")
+  modal.id = "return-policy-details-modal"
+  modal.className = "modal fade"
+  modal.setAttribute("tabindex", "-1")
+  modal.setAttribute("aria-labelledby", "returnPolicyDetailsModalLabel")
+  modal.setAttribute("aria-hidden", "true")
 
   // Set modal content
   modal.innerHTML = `
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="returnPolicyDetailsModalLabel">Return Policy Details: ${id}</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6>Policy Information</h6>
-                            <p><strong>Policy Name:</strong> ${policyDetails.policyName}</p>
-                            <p><strong>Supplier:</strong> ${policyDetails.supplier}</p>
-                            <p><strong>Category:</strong> ${policyDetails.category}</p>
-                            <p><strong>Return Period:</strong> ${policyDetails.returnPeriod} days</p>
-                            <p><strong>Restocking Fee:</strong> ${policyDetails.restockingFee}%</p>
-                            <p><strong>Status:</strong> <span class="badge bg-${getStatusBadgeColor(policyDetails.status)}">${policyDetails.status}</span></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Conditions</h6>
-                            <p>${policyDetails.conditions}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <h6>Return Process</h6>
-                            <ol>
-                                <li>Contact supplier within ${policyDetails.returnPeriod} days of receipt</li>
-                                <li>Obtain Return Authorization Number</li>
-                                <li>Package items securely with original packaging if possible</li>
-                                <li>Include copy of invoice and Return Authorization Number</li>
-                                <li>Ship to supplier's designated return address</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="editReturnPolicy('${id}')">Edit</button>
-                </div>
-            </div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="returnPolicyDetailsModalLabel">Return Policy Details: ${id}</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    `
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h6>Policy Information</h6>
+              <p><strong>Policy Name:</strong> ${policyDetails.policyName}</p>
+              <p><strong>Supplier:</strong> ${policyDetails.supplier}</p>
+              <p><strong>Category:</strong> ${policyDetails.category}</p>
+              <p><strong>Return Period:</strong> ${policyDetails.returnPeriod} days</p>
+              <p><strong>Restocking Fee:</strong> ${policyDetails.restockingFee}%</p>
+              <p><strong>Status:</strong> <span class="badge bg-${getStatusBadgeColor(policyDetails.status)}">${policyDetails.status}</span></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Conditions</h6>
+              <p>${policyDetails.conditions}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h6>Return Process</h6>
+              <ol>
+                <li>Contact supplier within ${policyDetails.returnPeriod} days of receipt</li>
+                <li>Obtain Return Authorization Number</li>
+                <li>Package items securely with original packaging if possible</li>
+                <li>Include copy of invoice and Return Authorization Number</li>
+                <li>Ship to supplier's designated return address</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="edit-from-details-btn" data-id="${id}">Edit</button>
+        </div>
+      </div>
+    </div>
+  `
+
+  // Add modal to body
+  document.body.appendChild(modal)
+  
+  // Add event listener to the Edit button
+  const editButton = modal.querySelector("#edit-from-details-btn")
+  if (editButton) {
+    editButton.addEventListener("click", function() {
+      const id = this.getAttribute("data-id")
+      
+      // Close details modal first
+      const bootstrap = window.bootstrap
+      const detailsModal = document.getElementById("return-policy-details-modal")
+      if (detailsModal) {
+        const detailsModalInstance = bootstrap.Modal.getInstance(detailsModal)
+        if (detailsModalInstance) {
+          detailsModalInstance.hide()
+        }
+      }
+      
+      // Open edit modal after a short delay
+      setTimeout(() => {
+        editReturnPolicy(id)
+      }, 300)
+    })
+  }
 
   // Initialize and show the modal
   const bootstrap = window.bootstrap
@@ -189,33 +443,22 @@ function viewReturnPolicy(id) {
 
 // Function to edit return policy
 function editReturnPolicy(id) {
-  // Hide details modal if it exists
-  const detailsModal = document.getElementById("return-policy-details-modal")
-  if (detailsModal) {
-    const bootstrap = window.bootstrap
-    const detailsModalInstance = bootstrap.Modal.getInstance(detailsModal)
-    if (detailsModalInstance) {
-      detailsModalInstance.hide()
-    }
+  // Remove existing modal if it exists to prevent duplicates
+  const existingModal = document.getElementById("return-policy-edit-modal")
+  if (existingModal) {
+    existingModal.remove()
   }
 
   // Fetch return policy details (simulated)
   const policyDetails = fetchReturnPolicyDetails(id)
 
-  // Create or get edit modal
-  let modal = document.getElementById("return-policy-edit-modal")
-
-  if (!modal) {
-    modal = document.createElement("div")
-    modal.id = "return-policy-edit-modal"
-    modal.className = "modal fade"
-    modal.setAttribute("tabindex", "-1")
-    modal.setAttribute("aria-labelledby", "returnPolicyEditModalLabel")
-    modal.setAttribute("aria-hidden", "true")
-
-    // Add modal to body
-    document.body.appendChild(modal)
-  }
+  // Create edit modal
+  const modal = document.createElement("div")
+  modal.id = "return-policy-edit-modal"
+  modal.className = "modal fade"
+  modal.setAttribute("tabindex", "-1")
+  modal.setAttribute("aria-labelledby", "returnPolicyEditModalLabel")
+  modal.setAttribute("aria-hidden", "true")
 
   // Set modal content
   modal.innerHTML = `
@@ -277,11 +520,20 @@ function editReturnPolicy(id) {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" onclick="saveEditedReturnPolicy()">Save Changes</button>
+          <button type="button" class="btn btn-primary" id="save-edited-policy-btn">Save Changes</button>
         </div>
       </div>
     </div>
   `
+
+  // Add modal to body
+  document.body.appendChild(modal)
+  
+  // Add event listener to the Save Changes button
+  const saveButton = modal.querySelector("#save-edited-policy-btn")
+  if (saveButton) {
+    saveButton.addEventListener("click", saveEditedReturnPolicy)
+  }
 
   // Initialize and show the modal
   const bootstrap = window.bootstrap
@@ -298,43 +550,53 @@ function saveEditedReturnPolicy() {
   const returnPeriod = document.getElementById("edit-return-period").value
   const restockingFee = document.getElementById("edit-restocking-fee").value
   const status = document.getElementById("edit-status").value
+  const conditions = document.getElementById("edit-conditions").value
 
-  // Find the row in the table
-  const table = document.getElementById("returnsTable")
-  if (table) {
-    const rows = table.querySelectorAll("tbody tr")
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i]
-      if (row.cells[0].textContent === id) {
-        // Update the row with new values
-        row.cells[1].textContent = supplier
-        row.cells[2].textContent = policyName
-        row.cells[3].textContent = category
-        row.cells[4].textContent = returnPeriod + " days"
-        row.cells[5].textContent = restockingFee + "%"
+  // Validate form
+  if (!supplier || !policyName || !category || !returnPeriod) {
+    alert("Please fill in all required fields.")
+    return
+  }
 
-        // Update status badge
-        const statusBadge = row.cells[6].querySelector(".badge")
-        if (statusBadge) {
-          statusBadge.className = `badge bg-${getStatusBadgeColor(status)}`
-          statusBadge.textContent = status
-        }
-
-        // Close the modal
-        const bootstrap = window.bootstrap
-        const modal = document.getElementById("return-policy-edit-modal")
-        if (modal) {
-          const modalInstance = bootstrap.Modal.getInstance(modal)
-          if (modalInstance) {
-            modalInstance.hide()
-          }
-        }
-
-        alert("Return policy updated successfully!")
-        break
-      }
+  // First, close the modal to prevent UI freezing
+  const bootstrap = window.bootstrap
+  const modal = document.getElementById("return-policy-edit-modal")
+  if (modal) {
+    const modalInstance = bootstrap.Modal.getInstance(modal)
+    if (modalInstance) {
+      modalInstance.hide()
     }
   }
+
+  // Update the row in the table after a short delay to ensure modal is closed
+  setTimeout(() => {
+    const table = document.getElementById("returnsTable")
+    if (table) {
+      const rows = table.querySelectorAll("tbody tr")
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i]
+        if (row.cells[0].textContent === id) {
+          // Update the row with new values
+          row.cells[1].textContent = supplier
+          row.cells[2].textContent = policyName
+          row.cells[3].textContent = category
+          row.cells[4].textContent = returnPeriod + " days"
+          row.cells[5].textContent = restockingFee + "%"
+
+          // Update status badge
+          const statusBadge = row.cells[6].querySelector(".badge")
+          if (statusBadge) {
+            statusBadge.className = `badge bg-${getStatusBadgeColor(status)}`
+            statusBadge.textContent = status
+          }
+
+          // Show success message
+          alert("Return policy updated successfully!")
+          break
+        }
+      }
+    }
+  }, 300)
 }
 
 // Function to delete return policy
@@ -359,8 +621,43 @@ function deleteReturnPolicy(id) {
 
 // Function to simulate fetching return policy details
 function fetchReturnPolicyDetails(id) {
-  // In a real application, this would be an API call
-  // For now, we'll return mock data based on the ID
+  // For newly added policies, get data from the table
+  const table = document.getElementById("returnsTable")
+  if (table) {
+    const rows = table.querySelectorAll("tbody tr")
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i]
+      if (row.cells[0].textContent === id) {
+        const supplier = row.cells[1].textContent
+        const policyName = row.cells[2].textContent
+        const category = row.cells[3].textContent
+        const returnPeriod = row.cells[4].textContent.replace(" days", "")
+        const restockingFee = row.cells[5].textContent.replace("%", "")
+        const status = row.cells[6].querySelector(".badge").textContent
+        
+        return {
+          id: id,
+          supplier: supplier,
+          policyName: policyName,
+          category: category,
+          returnPeriod: returnPeriod,
+          restockingFee: restockingFee,
+          status: status,
+          conditions: id.includes("1001")
+            ? "Items must be in original packaging and unused condition. All accessories must be included."
+            : id.includes("1002")
+              ? "Electronics must be in original packaging with all accessories and manuals. No returns on opened software."
+              : id.includes("1003")
+                ? "Furniture must be in original condition with no damage. Customer responsible for return shipping."
+                : id.includes("1004")
+                  ? "IT equipment must be in original packaging with all accessories. No returns on opened software or consumables."
+                  : "Items must be in original condition and packaging."
+        }
+      }
+    }
+  }
+  
+  // Fallback to mock data for predefined IDs
   return {
     id: id,
     supplier: id.includes("1001")
@@ -433,55 +730,6 @@ function getStatusBadgeColor(status) {
   }
 }
 
-// Initialize when the document is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  // If supplier return policy content is loaded, initialize it
-  if (document.getElementById("supplier-return-content")) {
-    initSupplierReturnPolicy()
-  }
-
-  // Add event listener for the supplier return policy management menu item
-  const supplierReturnLink = document.querySelector("a[onclick=\"loadContent('supplier-return')\"]")
-  if (supplierReturnLink) {
-    supplierReturnLink.removeAttribute("onclick")
-    supplierReturnLink.addEventListener("click", (e) => {
-      e.preventDefault()
-      handleSupplierReturnClick()
-    })
-  }
-})
-
-// Function to handle supplier return policy menu click
-function handleSupplierReturnClick() {
-  console.log("Handling supplier return policy click")
-
-  // Hide all content sections first
-  const allContentSections = document.querySelectorAll("#main-content > div")
-  allContentSections.forEach((section) => {
-    section.style.display = "none"
-  })
-
-  // Create or show the supplier return policy content section
-  let contentSection = document.getElementById("supplier-return-content")
-
-  if (!contentSection) {
-    contentSection = createSupplierReturnContent()
-    document.getElementById("main-content").appendChild(contentSection)
-    initSupplierReturnPolicy()
-  } else {
-    contentSection.style.display = "block"
-  }
-
-  // Update active state in sidebar
-  updateSidebarActiveState("supplier-return")
-
-  // Close sidebar on mobile after navigation
-  if (window.innerWidth < 768) {
-    document.getElementById("sidebar").classList.add("active")
-    document.getElementById("content").classList.add("active")
-  }
-}
-
 // Function to create supplier return policy content section if it doesn't exist
 function createSupplierReturnContent() {
   console.log("Creating supplier return policy content")
@@ -495,7 +743,7 @@ function createSupplierReturnContent() {
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Return Policies</h5>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addReturnPolicyModal">
+        <button class="btn btn-primary" id="add-return-policy-btn">
           <i class="fas fa-plus me-2"></i>Add Return Policy
         </button>
       </div>
@@ -613,6 +861,37 @@ function createSupplierReturnContent() {
   return section
 }
 
+// Function to handle supplier return policy menu click
+function handleSupplierReturnClick() {
+  console.log("Handling supplier return policy click")
+
+  // Hide all content sections first
+  const allContentSections = document.querySelectorAll("#main-content > div")
+  allContentSections.forEach((section) => {
+    section.style.display = "none"
+  })
+
+  // Create or show the supplier return policy content section
+  let contentSection = document.getElementById("supplier-return-content")
+
+  if (!contentSection) {
+    contentSection = createSupplierReturnContent()
+    document.getElementById("main-content").appendChild(contentSection)
+    initSupplierReturnPolicy()
+  } else {
+    contentSection.style.display = "block"
+  }
+
+  // Update active state in sidebar
+  updateSidebarActiveState("supplier-return")
+
+  // Close sidebar on mobile after navigation
+  if (window.innerWidth < 768) {
+    document.getElementById("sidebar").classList.add("active")
+    document.getElementById("content").classList.add("active")
+  }
+}
+
 // Function to update sidebar active state
 function updateSidebarActiveState(contentType) {
   // Remove active class from all sidebar items
@@ -647,15 +926,21 @@ function updateSidebarActiveState(contentType) {
   }
 }
 
-// Initialize when the DOM is loaded
+// Initialize when the document is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if we're on the supplier return policy page
-  const returnPolicyContent = document.getElementById("supplier-return-content")
-  if (returnPolicyContent) {
-    console.log("Return policy content found on page load")
+  // If supplier return policy content is loaded, initialize it
+  if (document.getElementById("supplier-return-content")) {
     initSupplierReturnPolicy()
-  } else {
-    console.log("Return policy content not found on page load")
+  }
+
+  // Add event listener for the supplier return policy management menu item
+  const supplierReturnLink = document.querySelector("a[onclick=\"loadContent('supplier-return')\"]")
+  if (supplierReturnLink) {
+    supplierReturnLink.removeAttribute("onclick")
+    supplierReturnLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      handleSupplierReturnClick()
+    })
   }
 })
 
@@ -669,4 +954,3 @@ document.addEventListener("contentLoaded", (e) => {
     }, 100)
   }
 })
-

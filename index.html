@@ -79,9 +79,9 @@
                                 <li>
                                     <a href="#" onclick="loadContent('supplier-quotation')">Supplier Quotation Management</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a href="#" onclick="loadContent('supplier-import')">Supplier Mass Import</a>
-                                </li>
+                                </li> -->
                                 <li>
                                     <a href="#" onclick="loadContent('supplier-contact')">Supplier Contact Management</a>
                                 </li>
@@ -219,9 +219,6 @@
                 <!-- Dashboard content will be loaded here by default -->
                 <div id="dashboard-content">
                     <h2 class="mb-4">Dashboard</h2>
-
-
-
                 </div>
             </div>
 
@@ -231,25 +228,35 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <!-- Custom JS -->
             <script src="script.js"></script>
+
+            <!-- Purchase Management Section -->
+            <script src="purchase-order-management.js"></script>
+            <script src="purchase-request-management.js"></script>
+
+            <!-- Supplier Management Section -->
             <script src="supplier-management.js"></script>
-            <script src="supplier-quotation.js"></script>
+             <script src="supplier-quotation.js"></script>
             <script src="supplier-contact-management.js"></script>
             <script src="supplier-product-management.js"></script>
             <script src="supplier-return-policy-management.js"></script>
             <script src="supplier-contract-management.js"></script>
             <script src="supplier-invoice-management.js"></script>
-            <!-- <script src="create-content-section.js"></script> -->
-            <script src="purchase-management.js"></script>
-            <script src="purchase-order-management.js"></script>
-            <script src="purchase-request-management.js"></script>
+
+
+            <!-- Purchase Management Section -->
             <script src="purchase-invoice-reports.js"></script>
             <script src="purchase-reports.js"></script>
             <script src="purchase-order-reports.js"></script>
             <script src="product-management.js"></script>
 
+                 <!-- Payment Management Section -->
             <script src="payment-management.js"></script>
             <script src="debit-notes-management.js"></script>
             <script src="tax-management.js"></script>
+
+            <!-- Purchase Reports Section -->
+            <script src="purchase-cost-statistics.js"></script>
+            <script src="purchase-orders-statistics.js"></script>
 </body>
 
 </html>
